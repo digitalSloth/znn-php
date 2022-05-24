@@ -1,0 +1,32 @@
+#-------------------------
+# Operating Specific Junk Files
+#-------------------------
+# OS X
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# OS X Thumbnails
+._*
+
+#-------------------------
+# Environment Files
+#-------------------------
+# These should never be under version control,
+# as it poses a security risk.
+.env
+
+#-------------------------
+# Composer
+#-------------------------
+vendor/
+composer.lock
+
+#-------------------------
+# IDE / Development Files
+#-------------------------
+
+# Jetbrains editors (PHPStorm, etc)
+.idea/
+*.iml
+
