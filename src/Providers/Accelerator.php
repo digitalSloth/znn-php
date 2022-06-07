@@ -58,27 +58,6 @@ class Accelerator extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
         $this->makeRequest('embedded.accelerator.getPillarVotes', [$pillarName, $projectHashes])
             ->processResponse();
 
-        if ($this->result['status']) {
-
-            $_result = [];
-
-            foreach ($this->result['data'] as $votes) {
-                //0 = Yes | 1 = No | 2 = Abstain
-                $vote = null;
-                if($votes->vote === 0) {
-                    $vote = true;
-                } elseif($votes->vote === 1) {
-                    $vote = false;
-                }
-
-                $_result[$votes->id] = [
-                    'vote' => $vote,
-                ];
-            }
-
-            $this->result['data'] = $_result;
-        }
-
         return $this->result;
     }
 

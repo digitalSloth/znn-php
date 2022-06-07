@@ -8,6 +8,7 @@ use DigitalSloth\ZnnPhp\Providers\Pillar;
 use DigitalSloth\ZnnPhp\Providers\Plasma;
 use DigitalSloth\ZnnPhp\Providers\Sentinel;
 use DigitalSloth\ZnnPhp\Providers\Stake;
+use DigitalSloth\ZnnPhp\Providers\Stats;
 use DigitalSloth\ZnnPhp\Providers\Swap;
 use DigitalSloth\ZnnPhp\Providers\Token;
 use GuzzleHttp\Client;
@@ -60,10 +61,15 @@ class Zenon
     public Ledger $ledger;
 
     /**
+     * @var Stats
+     */
+    public Stats $stats;
+
+    /**
      * @param string $host
      * @param bool $throwApiErrors
      */
-	public function __construct(string $host = '127.0.0.1', bool $throwApiErrors = false)
+	public function __construct(string $host = '127.0.0.1:35997', bool $throwApiErrors = false)
 	{
 		$this->httpClient = new Client([
 			'base_uri' => $host,
@@ -78,6 +84,7 @@ class Zenon
         $this->swap = new Swap($this->httpClient, $throwApiErrors);
         $this->token = new Token($this->httpClient, $throwApiErrors);
         $this->ledger = new Ledger($this->httpClient, $throwApiErrors);
+        $this->stats = new Stats($this->httpClient, $throwApiErrors);
 
 		return $this;
 	}
