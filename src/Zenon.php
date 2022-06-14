@@ -66,15 +66,15 @@ class Zenon
     public Stats $stats;
 
     /**
-     * @param string $host
+     * @param string $nodeUrl
      * @param bool $throwApiErrors
      */
-	public function __construct(string $host = '127.0.0.1:35997', bool $throwApiErrors = false)
-	{
-		$this->httpClient = new Client([
-			'base_uri' => $host,
-			'timeout' => 2.0,
-		]);
+    public function __construct(string $nodeUrl = '127.0.0.1:35997', bool $throwApiErrors = false)
+    {
+        $this->httpClient = new Client([
+            'base_uri' => $nodeUrl,
+            'timeout' => 2.0,
+        ]);
 
         $this->accelerator = new Accelerator($this->httpClient, $throwApiErrors);
         $this->pillar = new Pillar($this->httpClient, $throwApiErrors);
@@ -86,6 +86,6 @@ class Zenon
         $this->ledger = new Ledger($this->httpClient, $throwApiErrors);
         $this->stats = new Stats($this->httpClient, $throwApiErrors);
 
-		return $this;
-	}
+        return $this;
+    }
 }
