@@ -4,7 +4,7 @@ The ZNN-PHP package provides access to the JSON-RPC endpoints of the [zenon.netw
 
 ## Requirements
 
-PHP 7.0 and later.
+PHP 7.4 and later.
 
 ```
 composer require digitalsloth/znn-php
@@ -13,9 +13,17 @@ composer require digitalsloth/znn-php
 ## Usage
 
 ```php
-$znn = new \DigitalSloth\ZnnPhp\Zenon('127.0.0.1:35997', true);
+$znn = new \DigitalSloth\ZnnPhp\Zenon('127.0.0.1:35997');
 
-$result = $znn->pillar->getAll();
+try {
+    $result = $znn->pillar->getAll();
+} catch (\DigitalSloth\ZnnPhp\Exceptions\HttpException $e) {
+    die($e->getMessage());
+}
+
+if (! $result['status']) {
+    die('Error loading data');
+}
 
 echo $result['data']->count;
 
