@@ -33,10 +33,6 @@ class Pillar extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
         $this->makeRequest('embedded.pillar.checkNameAvailability', [$name])
             ->processResponse();
 
-        if (empty($this->result['data'])) {
-            $this->result['data'] = false;
-        }
-
         return $this->result;
     }
 

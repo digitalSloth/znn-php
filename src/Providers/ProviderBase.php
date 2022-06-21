@@ -52,7 +52,7 @@ class ProviderBase
      * @return $this
      * @throws HttpException
      */
-    protected function makeRequest(string $method, array $data = []): static
+    protected function makeRequest(string $method, array $data = []): ProviderBase
     {
         try {
             $this->lastRequest = $this->httpClient->post('', [
@@ -76,7 +76,7 @@ class ProviderBase
      * @return $this
      * @throws ApiException
      */
-    protected function processResponse(): static
+    protected function processResponse(): ProviderBase
     {
         if ($this->lastRequest->getStatusCode() === 200) {
 
