@@ -28,6 +28,6 @@ if (! $result['status']) {
 echo $result['data']->count;
 
 foreach ($result['data']->list as $pillar) {
-    var_dump($pillar)
+    var_dump($pillar);
 }
 ```
