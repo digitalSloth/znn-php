@@ -12,14 +12,25 @@ composer require digitalsloth/znn-php
 
 ## Usage
 
-```php
-$znn = new \DigitalSloth\ZnnPhp\Zenon('127.0.0.1:35997');
+### Setup
+ - **Node Url** - By default, it will try and connect to a local node `127.0.0.1:35997` but you can pass in any public node URL. 
+ - **Throw Errors** - You can choose to throw errors or not, defaults to `false`
 
-try {
-    $result = $znn->pillar->getAll();
-} catch (\DigitalSloth\ZnnPhp\Exceptions\HttpException $e) {
-    die($e->getMessage());
-}
+```php
+// config
+$nodeUrl = 'ws://public.deeZNNodez.com:35998';
+$throwErrors = true;
+
+// zenon client
+$znn = new \DigitalSloth\ZnnPhp\Zenon($nodeUrl, $throwErrors);
+```
+
+### Loading data
+Once you have your `$znn` instance you can make requests:
+
+```php
+// load all pillars
+$result = $znn->pillar->getAll();
 
 if (! $result['status']) {
     die('Error loading data');
@@ -31,3 +42,5 @@ foreach ($result['data']->list as $pillar) {
     var_dump($pillar);
 }
 ```
+
+All `accelerator`, `pillar`, `plasma`, `sentinel`, `stake`, `swap` , `token`, `ledger` and `stats` endpoints listed [here](https://github.com/zenon-network/znn-wiki/blob/master/api.md#embedded-smart-contracts) can be reached through the `$znn` instance.
