@@ -2,7 +2,7 @@
 
 namespace DigitalSloth\ZnnPhp\Exceptions;
 
-class HttpException extends \Exception
+class HttpException extends Exception
 {
 
 }

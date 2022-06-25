@@ -2,7 +2,7 @@
 
 namespace DigitalSloth\ZnnPhp\Exceptions;
 
-class ApiException extends Exception
+class Exception extends \Exception
 {
 
 }
