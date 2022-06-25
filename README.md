@@ -1,6 +1,6 @@
 # znn-php
 
-The ZNN-PHP package provides access to the JSON-RPC endpoints of the [zenon.network](https://zenon.network/) as described [here](https://github.com/zenon-network/znn-wiki/blob/master/api.md).
+The ZNN-PHP package provides access to the read-only JSON-RPC endpoints of the [zenon.network](https://zenon.network/) as described [here](https://github.com/zenon-network/znn-wiki/blob/master/api.md).
 
 ## Requirements
 
