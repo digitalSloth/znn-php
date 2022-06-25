@@ -11,14 +11,25 @@ use DigitalSloth\ZnnPhp\Providers\Stake;
 use DigitalSloth\ZnnPhp\Providers\Stats;
 use DigitalSloth\ZnnPhp\Providers\Swap;
 use DigitalSloth\ZnnPhp\Providers\Token;
-use GuzzleHttp\Client;
+use GuzzleHttp\Client as HttpClient;
+use WebSocket\Client as WsClient;
 
 class Zenon
 {
     /**
-     * @var Client
+     * @var string $nodeUrl
      */
-    protected Client $httpClient;
+    protected string $nodeUrl;
+
+    /**
+     * @var ?HttpClient
+     */
+    protected ?HttpClient $httpClient = null;
+
+    /**
+     * @var ?WsClient
+     */
+    protected ?WsClient $wsClient = null;
 
     /**
      * @var Pillar
@@ -67,25 +78,50 @@ class Zenon
 
     /**
      * @param string $nodeUrl
-     * @param bool $throwApiErrors
+     * @param bool $throwErrors
      */
-    public function __construct(string $nodeUrl = '127.0.0.1:35997', bool $throwApiErrors = false)
+    public function __construct(string $nodeUrl = '127.0.0.1:35997', bool $throwErrors = false)
     {
-        $this->httpClient = new Client([
-            'base_uri' => $nodeUrl,
-            'timeout' => 2.0,
-        ]);
+        $this->nodeUrl = $nodeUrl;
+        $this->connect();
 
-        $this->accelerator = new Accelerator($this->httpClient, $throwApiErrors);
-        $this->pillar = new Pillar($this->httpClient, $throwApiErrors);
-        $this->plasma = new Plasma($this->httpClient, $throwApiErrors);
-        $this->sentinel = new Sentinel($this->httpClient, $throwApiErrors);
-        $this->stake = new Stake($this->httpClient, $throwApiErrors);
-        $this->swap = new Swap($this->httpClient, $throwApiErrors);
-        $this->token = new Token($this->httpClient, $throwApiErrors);
-        $this->ledger = new Ledger($this->httpClient, $throwApiErrors);
-        $this->stats = new Stats($this->httpClient, $throwApiErrors);
+        $this->accelerator = new Accelerator($this->wsClient ?: $this->httpClient, $throwErrors);
+        $this->pillar = new Pillar($this->wsClient ?: $this->httpClient, $throwErrors);
+        $this->plasma = new Plasma($this->wsClient ?: $this->httpClient, $throwErrors);
+        $this->sentinel = new Sentinel($this->wsClient ?: $this->httpClient, $throwErrors);
+        $this->stake = new Stake($this->wsClient ?: $this->httpClient, $throwErrors);
+        $this->swap = new Swap($this->wsClient ?: $this->httpClient, $throwErrors);
+        $this->token = new Token($this->wsClient ?: $this->httpClient, $throwErrors);
+        $this->ledger = new Ledger($this->wsClient ?: $this->httpClient, $throwErrors);
+        $this->stats = new Stats($this->wsClient ?: $this->httpClient, $throwErrors);
 
         return $this;
+    }
+
+    /**
+     * Checks if the nodeUrl is a WS/WSS connection
+     *
+     * @return bool
+     */
+    protected function isWsConnection(): bool
+    {
+        return (substr($this->nodeUrl, 0, 5) === "ws://" || substr($this->nodeUrl, 0, 6) === 'wss://');
+    }
+
+    /**
+     * Connections to the relevant node client
+     *
+     * @return void
+     */
+    private function connect(): void
+    {
+        if ($this->isWsConnection()) {
+            $this->wsClient = new WsClient($this->nodeUrl);
+        } else {
+            $this->httpClient = new HttpClient([
+                'base_uri' => $this->nodeUrl,
+                'timeout' => 2.0,
+            ]);
+        }
     }
 }
