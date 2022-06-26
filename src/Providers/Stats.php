@@ -2,8 +2,7 @@
 
 namespace DigitalSloth\ZnnPhp\Providers;
 
-use DigitalSloth\ZnnPhp\Exceptions\ApiException;
-use DigitalSloth\ZnnPhp\Exceptions\HttpException;
+use DigitalSloth\ZnnPhp\Exceptions\Exception;
 
 class Stats extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
 {
@@ -11,7 +10,7 @@ class Stats extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * This API call will return information about the os.
      *
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function osInfo(): array
     {
@@ -25,7 +24,7 @@ class Stats extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * This API call will return information about the runtime.
      *
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function runtimeInfo(): array
     {
@@ -39,7 +38,7 @@ class Stats extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * This API call will return information about the process.
      *
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function processInfo(): array
     {
@@ -53,7 +52,7 @@ class Stats extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * This API call will return information about the sync status.
      *
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function syncInfo(): array
     {
@@ -67,7 +66,7 @@ class Stats extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * This API call will return information about the network.
      *
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function networkInfo(): array
     {

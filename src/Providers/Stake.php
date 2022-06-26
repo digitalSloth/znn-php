@@ -2,8 +2,7 @@
 
 namespace DigitalSloth\ZnnPhp\Providers;
 
-use DigitalSloth\ZnnPhp\Exceptions\ApiException;
-use DigitalSloth\ZnnPhp\Exceptions\HttpException;
+use DigitalSloth\ZnnPhp\Exceptions\Exception;
 
 class Stake extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
 {
@@ -14,7 +13,7 @@ class Stake extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @param int $page
      * @param int $perPage
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getEntriesByAddress(string $address, int $page = 0, int $perPage = 100): array
     {
@@ -29,7 +28,7 @@ class Stake extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      *
      * @param string $address
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getUncollectedReward(string $address): array
     {
@@ -46,7 +45,7 @@ class Stake extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @param int $page
      * @param int $perPage
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getFrontierRewardByPage(string $address, int $page = 0, int $perPage = 100): array
     {

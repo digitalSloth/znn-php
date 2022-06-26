@@ -2,8 +2,7 @@
 
 namespace DigitalSloth\ZnnPhp\Providers;
 
-use DigitalSloth\ZnnPhp\Exceptions\ApiException;
-use DigitalSloth\ZnnPhp\Exceptions\HttpException;
+use DigitalSloth\ZnnPhp\Exceptions\Exception;
 
 class Token extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
 {
@@ -13,7 +12,7 @@ class Token extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @param int $page
      * @param int $perPage
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getAll(int $page = 0, int $perPage = 100): array
     {
@@ -30,7 +29,7 @@ class Token extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @param int $page
      * @param int $perPage
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getByOwner(string $address, int $page = 0, int $perPage = 100): array
     {
@@ -45,7 +44,7 @@ class Token extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      *
      * @param string $token
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getByZts(string $token): array
     {

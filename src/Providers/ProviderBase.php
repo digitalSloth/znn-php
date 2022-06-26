@@ -11,9 +11,19 @@ use WebSocket\Client as WsClient;
 class ProviderBase
 {
     /**
-     * @var HttpClient|WsClient $requestClient
+     * @var HttpClient|WsClient $client
      */
-    protected $requestClient;
+    protected $client;
+
+    /**
+     * @var bool $throwErrors
+     */
+    protected bool $throwErrors = false;
+
+    /**
+     * @var bool $isWsConnection
+     */
+    protected $isWsConnection;
 
     /**
      * @var mixed $lastRequest
@@ -29,18 +39,15 @@ class ProviderBase
     ];
 
     /**
-     * @var bool $throwErrors
-     */
-    protected bool $throwErrors = false;
-
-    /**
-     * @param $requestClient
+     * @param $client
      * @param $throwErrors
+     * @param $isWsConnection
      */
-    public function __construct($requestClient, $throwErrors)
+    public function __construct($client, $throwErrors, $isWsConnection)
     {
-        $this->requestClient = $requestClient;
+        $this->client = $client;
         $this->throwErrors = $throwErrors;
+        $this->isWsConnection = $isWsConnection;
 
         return $this;
     }
@@ -55,10 +62,10 @@ class ProviderBase
      */
     protected function makeRequest(string $method, array $data = []): ProviderBase
     {
-        if ($this->requestClient instanceof HttpClient) {
-            $this->makeHttpRequest($method, $data);
-        } elseif ($this->requestClient instanceof WsClient) {
+        if ($this->isWsConnection) {
             $this->makeWsRequest($method, $data);
+        } else {
+            $this->makeHttpRequest($method, $data);
         }
 
         return $this;
@@ -72,12 +79,10 @@ class ProviderBase
      */
     protected function processResponse(): ProviderBase
     {
-        $response = false;
-
-        if ($this->requestClient instanceof HttpClient) {
-            $response = $this->processHttpResponse();
-        } elseif ($this->requestClient instanceof WsClient) {
+        if ($this->isWsConnection) {
             $response = $this->processWsResponse();
+        } else {
+            $response = $this->processHttpResponse();
         }
 
         if($response) {
@@ -89,7 +94,7 @@ class ProviderBase
                 if ($this->throwErrors) {
                     throw new ApiException($data->error->message);
                 }
-            } elseif ($data->result) {
+            } else {
                 $this->result['status'] = true;
                 $this->result['data'] = $data->result;
             }
@@ -109,7 +114,7 @@ class ProviderBase
     private function makeHttpRequest(string $method, array $data): void
     {
         try {
-            $this->lastRequest = $this->requestClient->post('', [
+            $this->lastRequest = $this->client->post('', [
                 'json' => [
                     'jsonrpc' => '2.0',
                     'id' => 0,
@@ -135,14 +140,14 @@ class ProviderBase
     private function makeWsRequest(string $method, array $data): void
     {
         try {
-            $this->requestClient->send(json_encode([
+            $this->client->send(json_encode([
                 'jsonrpc' => '2.0',
                 'id' => 0,
                 'method' => $method,
                 'params' => $data,
             ]));
-            $this->lastRequest = $this->requestClient->receive();
-            $this->requestClient->close();
+            $this->lastRequest = $this->client->receive();
+            $this->client->close();
         } catch (\WebSocket\Exception $exception) {
             if ($this->throwErrors) {
                 throw new WsException($exception->getMessage());

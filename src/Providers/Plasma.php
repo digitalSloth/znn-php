@@ -2,8 +2,7 @@
 
 namespace DigitalSloth\ZnnPhp\Providers;
 
-use DigitalSloth\ZnnPhp\Exceptions\ApiException;
-use DigitalSloth\ZnnPhp\Exceptions\HttpException;
+use DigitalSloth\ZnnPhp\Exceptions\Exception;
 
 class Plasma extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
 {
@@ -12,7 +11,7 @@ class Plasma extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      *
      * @param string $address
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function get(string $address): array
     {
@@ -29,7 +28,7 @@ class Plasma extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @param int $page
      * @param int $perPage
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getEntriesByAddress(string $address, int $page = 0, int $perPage = 100): array
     {
@@ -47,7 +46,7 @@ class Plasma extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @param string $toAddress
      * @param string $data
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getRequiredPoWForAccountBlock(string $address, int $blockType, string $toAddress, string $data): array
     {

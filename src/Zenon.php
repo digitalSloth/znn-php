@@ -85,15 +85,20 @@ class Zenon
         $this->nodeUrl = $nodeUrl;
         $this->connect();
 
-        $this->accelerator = new Accelerator($this->wsClient ?: $this->httpClient, $throwErrors);
-        $this->pillar = new Pillar($this->wsClient ?: $this->httpClient, $throwErrors);
-        $this->plasma = new Plasma($this->wsClient ?: $this->httpClient, $throwErrors);
-        $this->sentinel = new Sentinel($this->wsClient ?: $this->httpClient, $throwErrors);
-        $this->stake = new Stake($this->wsClient ?: $this->httpClient, $throwErrors);
-        $this->swap = new Swap($this->wsClient ?: $this->httpClient, $throwErrors);
-        $this->token = new Token($this->wsClient ?: $this->httpClient, $throwErrors);
-        $this->ledger = new Ledger($this->wsClient ?: $this->httpClient, $throwErrors);
-        $this->stats = new Stats($this->wsClient ?: $this->httpClient, $throwErrors);
+        $isWsConnection = $this->isWsConnection();
+        $client = ($isWsConnection
+            ? $this->wsClient
+            : $this->httpClient);
+
+        $this->accelerator = new Accelerator($client, $throwErrors, $isWsConnection);
+        $this->pillar = new Pillar($client, $throwErrors, $isWsConnection);
+        $this->plasma = new Plasma($client, $throwErrors, $isWsConnection);
+        $this->sentinel = new Sentinel($client, $throwErrors, $isWsConnection);
+        $this->stake = new Stake($client, $throwErrors, $isWsConnection);
+        $this->swap = new Swap($client, $throwErrors, $isWsConnection);
+        $this->token = new Token($client, $throwErrors, $isWsConnection);
+        $this->ledger = new Ledger($client, $throwErrors, $isWsConnection);
+        $this->stats = new Stats($client, $throwErrors, $isWsConnection);
 
         return $this;
     }

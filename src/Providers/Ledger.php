@@ -2,8 +2,7 @@
 
 namespace DigitalSloth\ZnnPhp\Providers;
 
-use DigitalSloth\ZnnPhp\Exceptions\ApiException;
-use DigitalSloth\ZnnPhp\Exceptions\HttpException;
+use DigitalSloth\ZnnPhp\Exceptions\Exception;
 
 class Ledger extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
 {
@@ -12,7 +11,7 @@ class Ledger extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      *
      * @param string $address
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getFrontierAccountBlock(string $address): array
     {
@@ -29,7 +28,7 @@ class Ledger extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @param int $page
      * @param int $perPage
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getUnconfirmedBlocksByAddress(string $address, int $page = 0, int $perPage = 100): array
     {
@@ -46,7 +45,7 @@ class Ledger extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @param int $page
      * @param int $perPage
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getUnreceivedBlocksByAddress(string $address, int $page = 0, int $perPage = 5): array
     {
@@ -61,7 +60,7 @@ class Ledger extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      *
      * @param string $hash
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getAccountBlockByHash(string $hash): array
     {
@@ -78,7 +77,7 @@ class Ledger extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @param int $height
      * @param int $count
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getAccountBlocksByHeight(string $address, int $height =  25, int $count = 5): array
     {
@@ -95,7 +94,7 @@ class Ledger extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @param int $page
      * @param int $perPage
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getAccountBlocksByPage(string $address, int $page =  0, int $perPage = 5): array
     {
@@ -109,7 +108,7 @@ class Ledger extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * This API call will return the latest momentum.
      *
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getFrontierMomentum(): array
     {
@@ -124,7 +123,7 @@ class Ledger extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      *
      * @param int $time
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getMomentumBeforeTime(int $time): array
     {
@@ -140,7 +139,7 @@ class Ledger extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @param int $page
      * @param int $perPage
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getMomentumsByPage(int $page =  0, int $perPage = 5): array
     {
@@ -155,7 +154,7 @@ class Ledger extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      *
      * @param string $hash
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getMomentumByHash(string $hash): array
     {
@@ -171,7 +170,7 @@ class Ledger extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @param int $height
      * @param int $count
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getMomentumsByHeight(int $height = 25, int $count = 5): array
     {
@@ -187,7 +186,7 @@ class Ledger extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @param int $height
      * @param int $count
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getDetailedMomentumsByHeight(int $height = 25, int $count = 5): array
     {
@@ -202,7 +201,7 @@ class Ledger extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      *
      * @param string $address
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getAccountInfoByAddress(string $address): array
     {

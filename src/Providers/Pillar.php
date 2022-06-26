@@ -2,8 +2,7 @@
 
 namespace DigitalSloth\ZnnPhp\Providers;
 
-use DigitalSloth\ZnnPhp\Exceptions\ApiException;
-use DigitalSloth\ZnnPhp\Exceptions\HttpException;
+use DigitalSloth\ZnnPhp\Exceptions\Exception;
 
 class Pillar extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
 {
@@ -11,7 +10,7 @@ class Pillar extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * This API call will return the current QSR cost for registering a new Pillar.
      *
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getQsrRegistrationCost(): array
     {
@@ -26,7 +25,7 @@ class Pillar extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      *
      * @param string $name
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function checkNameAvailability(string $name): array
     {
@@ -42,7 +41,7 @@ class Pillar extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @param int $page
      * @param int $perPage
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getAll(int $page = 0, int $perPage = 1000): array
     {
@@ -57,7 +56,7 @@ class Pillar extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      *
      * @param string $address
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getByOwner(string $address): array
     {
@@ -72,7 +71,7 @@ class Pillar extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      *
      * @param string $name
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getByName(string $name): array
     {
@@ -87,7 +86,7 @@ class Pillar extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      *
      * @param string $address
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getDelegatedPillar(string $address): array
     {
@@ -102,7 +101,7 @@ class Pillar extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      *
      * @param string $address
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getDepositedQsr(string $address): array
     {
@@ -117,7 +116,7 @@ class Pillar extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      *
      * @param string $address
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getUncollectedReward(string $address): array
     {
@@ -134,7 +133,7 @@ class Pillar extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @param int $page
      * @param int $perPage
      * @return array
-     * @throws ApiException|HttpException
+     * @throws Exception
      */
     public function getFrontierRewardByPage(string $address, int $page = 0, int $perPage = 100): array
     {
