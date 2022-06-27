@@ -172,7 +172,7 @@ class Ledger extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @return array
      * @throws Exception
      */
-    public function getMomentumsByHeight(int $height = 25, int $count = 5): array
+    public function getMomentumsByHeight(int $height = 1, int $count = 100): array
     {
         $this->makeRequest('ledger.getMomentumsByHeight', [$height, $count])
             ->processResponse();
@@ -188,7 +188,7 @@ class Ledger extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @return array
      * @throws Exception
      */
-    public function getDetailedMomentumsByHeight(int $height = 25, int $count = 5): array
+    public function getDetailedMomentumsByHeight(int $height = 1, int $count = 100): array
     {
         $this->makeRequest('ledger.getDetailedMomentumsByHeight', [$height, $count])
             ->processResponse();
