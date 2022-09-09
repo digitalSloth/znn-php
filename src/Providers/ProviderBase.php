@@ -162,7 +162,7 @@ class ProviderBase
      */
     private function processHttpResponse(): ?string
     {
-        if ($this->lastRequest->getStatusCode() === 200) {
+        if ($this->lastRequest && $this->lastRequest->getStatusCode() === 200) {
             return $this->lastRequest
                 ->getBody()
                 ->getContents();

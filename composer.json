@@ -10,10 +10,14 @@
         }
     ],
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.0",
+        "bitwasp/bech32": "^0.0.1",
         "ext-json": "*",
         "guzzlehttp/guzzle": "^7.0",
-        "textalk/websocket": "^1.5"
+        "simplito/elliptic-php": "^1.0",
+        "textalk/websocket": "^1.5",
+        "web3p/rlp": "^0.3.5",
+        "web3p/web3.php": "^0.1.6"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.0"
