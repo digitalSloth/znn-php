@@ -97,4 +97,9 @@ class Utilities
 
         return null;
     }
+
+    public static function getDataFingerprint(string $data): string
+    {
+        return substr(static::decodeData($data), 0, 8);
+    }
 }
