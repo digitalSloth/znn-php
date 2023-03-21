@@ -1,28 +1,30 @@
 <?php
 
-namespace DigitalSloth\ZnnPhp\Abi;
+namespace DigitalSloth\ZnnPhp\Abi\Contracts;
 
-class Stake extends Abi
+use DigitalSloth\ZnnPhp\Abi\Abi;
+
+class Plasma extends Abi
 {
     protected array $abi = [
         [
             'type' => 'function',
-            'name' => 'Stake',
+            'name' => 'Fuse',
             'inputs' => [
                 [
-                    'name' => 'durationInSec',
-                    'type' => 'int64',
-                ],
+                    'name' => 'address',
+                    'type' => 'address',
+                ]
             ],
         ],
         [
             'type' => 'function',
-            'name' => 'Cancel',
+            'name' => 'CancelFuse',
             'inputs' => [
                 [
                     'name' => 'id',
                     'type' => 'hash',
-                ],
+                ]
             ],
         ],
     ];

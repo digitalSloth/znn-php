@@ -2,10 +2,10 @@
 
 namespace DigitalSloth\ZnnPhp\Abi\Types;
 
-use Web3\Formatters\IntegerFormatter;
-use Web3\Formatters\BigNumberFormatter;
+use DigitalSloth\ZnnPhp\Formatters\IntegerFormatter;
+use DigitalSloth\ZnnPhp\Formatters\BigNumberFormatter;
 
-class Uinteger extends BaseType implements IType
+class Uinteger extends BaseType implements TypeInterface
 {
     /**
      * construct
@@ -61,10 +61,10 @@ class Uinteger extends BaseType implements IType
     {
         $match = [];
 
-        if (preg_match('/^[0]+([a-f0-9]+)$/', $value, $match) === 1) {
-            // due to value without 0x prefix, we will parse as decimal
+        if (preg_match('/^([a-f0-9]+)$/', $value, $match) === 1) {
             $value = '0x' . $match[1];
         }
-        return (string) BigNumberFormatter::format($value);
+
+        return BigNumberFormatter::format($value);
     }
 }

@@ -1,13 +1,15 @@
 <?php
 
-namespace DigitalSloth\ZnnPhp\Abi;
+namespace DigitalSloth\ZnnPhp\Abi\Contracts;
+
+use DigitalSloth\ZnnPhp\Abi\Abi;
 
 class Htlc extends Abi
 {
     protected array $abi = [
         [
             'type' => 'function',
-            'name' => 'CreateHtlc',
+            'name' => 'Create',
             'inputs' => [
                 [
                     'name' => 'hashLocked',
@@ -33,7 +35,7 @@ class Htlc extends Abi
         ],
         [
             'type' => 'function',
-            'name' => 'ReclaimHtlc',
+            'name' => 'Reclaim',
             'inputs' => [
                 [
                     'name' => 'id',
@@ -43,7 +45,7 @@ class Htlc extends Abi
         ],
         [
             'type' => 'function',
-            'name' => 'UnlockHtlc',
+            'name' => 'Unlock',
             'inputs' => [
                 [
                     'name' => 'id',
@@ -57,39 +59,21 @@ class Htlc extends Abi
         ],
         [
             'type' => 'function',
-            'name' => 'htlcInfo',
+            'name' => 'DenyProxyUnlock',
+            'inputs' => [],
+        ],
+        [
+            'type' => 'function',
+            'name' => 'AllowProxyUnlock',
+            'inputs' => [],
+        ],
+        [
+            'type' => 'function',
+            'name' => 'htlcProxyUnlockInfo',
             'inputs' => [
                 [
-                    'name' => 'timeLocked',
-                    'type' => 'address',
-                ],
-                [
-                    'name' => 'hashLocked',
-                    'type' => 'address',
-                ],
-                [
-                    'name' => 'tokenStandard',
-                    'type' => 'tokenStandard',
-                ],
-                [
-                    'name' => 'amount',
-                    'type' => 'uint256',
-                ],
-                [
-                    'name' => 'expirationTime',
-                    'type' => 'int64',
-                ],
-                [
-                    'name' => 'hashType',
-                    'type' => 'uint8',
-                ],
-                [
-                    'name' => 'keyMaxSize',
-                    'type' => 'uint8',
-                ],
-                [
-                    'name' => 'hashLock',
-                    'type' => 'bytes',
+                    'name' => 'allowed',
+                    'type' => 'bool',
                 ],
             ],
         ],

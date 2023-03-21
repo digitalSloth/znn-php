@@ -2,7 +2,7 @@
 
 namespace DigitalSloth\ZnnPhp\Abi\Types;
 
-interface IType
+interface TypeInterface
 {
     /**
      * isType

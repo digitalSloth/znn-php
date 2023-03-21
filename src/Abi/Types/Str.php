@@ -2,11 +2,11 @@
 
 namespace DigitalSloth\ZnnPhp\Abi\Types;
 
-use Web3\Utils;
-use Web3\Formatters\IntegerFormatter;
-use Web3\Formatters\BigNumberFormatter;
+use DigitalSloth\ZnnPhp\Formatters\BigNumberFormatter;
+use DigitalSloth\ZnnPhp\Formatters\IntegerFormatter;
+use DigitalSloth\ZnnPhp\Utilities;
 
-class Str extends BaseType implements IType
+class Str extends BaseType implements TypeInterface
 {
     /**
      * construct
@@ -48,7 +48,7 @@ class Str extends BaseType implements IType
      */
     public function inputFormat(mixed $value, string $name): string
     {
-        $value = Utils::toHex($value);
+        $value = Utilities::toHex($value);
         $prefix = IntegerFormatter::format(mb_strlen($value) / 2);
         $l = floor((mb_strlen($value) + 63) / 64);
         $padding = (($l * 64 - mb_strlen($value) + 1) >= 0) ? $l * 64 - mb_strlen($value) : 0;
@@ -70,10 +70,11 @@ class Str extends BaseType implements IType
         $match = [];
 
         if (preg_match('/^[0]+([a-f0-9]+)$/', $strLen, $match) === 1) {
-            $strLen = BigNumberFormatter::format('0x' . $match[1])->toString();
+            $strLen = BigNumberFormatter::format('0x' . $match[1]);
         }
+
         $strValue = mb_substr($strValue, 0, (int) $strLen * 2);
 
-        return Utils::hexToBin($strValue);
+        return Utilities::hexToBin($strValue);
     }
 }

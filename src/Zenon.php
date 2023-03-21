@@ -3,6 +3,7 @@
 namespace DigitalSloth\ZnnPhp;
 
 use DigitalSloth\ZnnPhp\Providers\Accelerator;
+use DigitalSloth\ZnnPhp\Providers\Htlc;
 use DigitalSloth\ZnnPhp\Providers\Ledger;
 use DigitalSloth\ZnnPhp\Providers\Pillar;
 use DigitalSloth\ZnnPhp\Providers\Plasma;
@@ -45,6 +46,11 @@ class Zenon
      * @var Accelerator
      */
     public Accelerator $accelerator;
+
+    /**
+     * @var Htlc
+     */
+    public Htlc $htlc;
 
     /**
      * @var Sentinel
@@ -91,6 +97,7 @@ class Zenon
             : $this->httpClient);
 
         $this->accelerator = new Accelerator($client, $throwErrors, $isWsConnection);
+        $this->htlc = new Htlc($client, $throwErrors, $isWsConnection);
         $this->pillar = new Pillar($client, $throwErrors, $isWsConnection);
         $this->plasma = new Plasma($client, $throwErrors, $isWsConnection);
         $this->sentinel = new Sentinel($client, $throwErrors, $isWsConnection);

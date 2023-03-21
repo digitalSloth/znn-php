@@ -4,18 +4,8 @@ namespace DigitalSloth\ZnnPhp\Abi\Types;
 
 use InvalidArgumentException;
 
-class Boolean extends BaseType implements IType
+class Boolean extends BaseType implements TypeInterface
 {
-    /**
-     * construct
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
     /**
      * isType
      *

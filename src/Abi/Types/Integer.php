@@ -2,10 +2,10 @@
 
 namespace DigitalSloth\ZnnPhp\Abi\Types;
 
-use Web3\Formatters\IntegerFormatter;
-use Web3\Formatters\BigNumberFormatter;
+use DigitalSloth\ZnnPhp\Formatters\IntegerFormatter;
+use DigitalSloth\ZnnPhp\Formatters\BigNumberFormatter;
 
-class Integer extends BaseType implements IType
+class Integer extends BaseType implements TypeInterface
 {
     /**
      * construct
