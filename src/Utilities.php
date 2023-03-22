@@ -6,46 +6,30 @@ use BitWasp\Bech32;
 use BitWasp\Bech32\Exception\Bech32Exception;
 use Elliptic\EdDSA;
 use InvalidArgumentException;
-use kornrunner\Keccak;
 use phpseclib3\Math\BigInteger as BigNumber;
 use stdClass;
 
 class Utilities
 {
-    /**
-     * SHA3_NULL_HASH
-     */
-    public const SHA3_NULL_HASH = 'c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
-
-
     public static function addressFromPublicKey(string $publicKey): bool|string
     {
         $hrp = 'z';
-        $hash = hash('sha3-256', hex2bin($publicKey), true);
-        $binary = [0];
+        $data = self::sha3($publicKey);
+        $data = [0, ...self::toBytesArray($data)];
+        $digest = array_slice($data, 0, 20);
 
-        // Convert hash to bytes array
-        for ($i = 0, $iMax = strlen($hash); $i < $iMax; $i++) {
-            $binary[] = ord($hash[$i]);
-        }
-
-        // Get first 20 array elements
-        $digest = array_slice($binary, 0, 20);
-
-        // bech32 and convert to address
         try {
             $bech32 = Bech32\convertBits($digest, count($digest), 8, 5);
+            return Bech32\encode($hrp, $bech32);
         } catch (Bech32Exception $e) {
             return false;
         }
-
-        return Bech32\encode($hrp, $bech32);
     }
 
     public static function verifySignedMessage(string $publicKey, string $message, string $signature): bool
     {
-        $ec = new EdDSA('ed25519');
         try {
+            $ec = new EdDSA('ed25519');
             $key = $ec->keyFromPublic($publicKey);
             $message = bin2hex(utf8_encode($message));
             return $key->verify($message, $signature);
@@ -56,11 +40,11 @@ class Utilities
 
     public static function guessAbiMethod(string $data): ?array
     {
-        $fingerprint = substr(self::toHex($data), 0, 8);
+        $fingerprint = self::getFingerprintFromData($data);
 
         $contracts = [
             'Accelerator' => Abi\Contracts\Accelerator::class,
-            'Bridge' => Abi\Contracts\Bridge::class,
+            //'Bridge' => Abi\Contracts\Bridge::class,
             'Common' => Abi\Contracts\Common::class,
             'Htlc' => Abi\Contracts\Htlc::class,
             'Pillar' => Abi\Contracts\Pillar::class,
@@ -76,9 +60,7 @@ class Utilities
             $methods = $abi->getMethods();
 
             foreach ($methods as $method) {
-                $methodFingerprint = $abi->getSignatureFingerprint($method);
-
-                if ($fingerprint === $methodFingerprint) {
+                if ($fingerprint === $abi->getSignatureFingerprint($method)) {
                     return [
                         'contract' => $contract,
                         'method' => $method,
@@ -90,14 +72,10 @@ class Utilities
         return null;
     }
 
-    public static function getDataFingerprint(string $data): string
+    public static function getFingerprintFromData(string $data): string
     {
         return substr(static::toHex($data), 0, 8);
     }
-
-
-
-
 
     /**
      * toHex
@@ -125,6 +103,7 @@ class Utilities
         if ($isPrefix) {
             return '0x'.$hex;
         }
+
         return $hex;
     }
 
@@ -173,53 +152,7 @@ class Utilities
      */
     public static function isAddress(string $value): bool
     {
-        if (preg_match('/^(0x|0X)?[a-f0-9A-F]{40}$/', $value) !== 1) {
-            return false;
-        }
-
-        if (preg_match('/^(0x|0X)?[a-f0-9]{40}$/', $value) === 1 || preg_match('/^(0x|0X)?[A-F0-9]{40}$/', $value) === 1) {
-            return true;
-        }
-
-        return self::isAddressChecksum($value);
-    }
-
-    /**
-     * isAddressChecksum
-     */
-    public static function isAddressChecksum(string $value): bool
-    {
-        $value = self::stripZero($value);
-        $hash = self::stripZero(self::sha3(mb_strtolower($value)));
-
-        for ($i = 0; $i < 40; $i++) {
-            if (
-                (intval($hash[$i], 16) > 7 && mb_strtoupper($value[$i]) !== $value[$i]) ||
-                (intval($hash[$i], 16) <= 7 && mb_strtolower($value[$i]) !== $value[$i])
-            ) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * toChecksumAddress
-     */
-    public static function toChecksumAddress(string $value): string
-    {
-        $value = self::stripZero(strtolower($value));
-        $hash = self::stripZero(self::sha3($value));
-        $ret = '0x';
-
-        for ($i = 0; $i < 40; $i++) {
-            if (intval($hash[$i], 16) >= 8) {
-                $ret .= strtoupper($value[$i]);
-            } else {
-                $ret .= $value[$i];
-            }
-        }
-        return $ret;
+        // TODO - address check
     }
 
     /**
@@ -240,13 +173,13 @@ class Utilities
             $value = self::hexToBin($value);
         }
 
-        $hash = Keccak::hash($value, 256);
+        $hash = hash('sha3-256' , $value);
 
-        if ($hash === self::SHA3_NULL_HASH) {
+        if ($hash === 'efbde2c3aee204a69b7696d4b10ff31137fe78e3946306284f806e2dfc68b805') {
             return null;
         }
 
-        return '0x' . $hash;
+        return $hash;
     }
 
     /**
@@ -255,6 +188,80 @@ class Utilities
     public static function toString(mixed $value): string
     {
         return (string) $value;
+    }
+
+    /**
+     * toBn
+     * Change number or number string to bignumber.
+     */
+    public static function toBn(BigNumber|string|int $number): array|BigNumber
+    {
+        if ($number instanceof BigNumber){
+            $bn = $number;
+        } elseif (is_int($number)) {
+            $bn = new BigNumber($number);
+        } elseif (preg_match('/^(-{0,1})[0-9]*$/', $number)) {
+            $number = (string) $number;
+
+            if (self::isNegative($number)) {
+                $count = 1;
+                $number = str_replace('-', '', $number, $count);
+                $negative1 = new BigNumber(-1);
+            }
+            if (strpos($number, '.') > 0) {
+                $comps = explode('.', $number);
+
+                if (count($comps) > 2) {
+                    throw new InvalidArgumentException('toBn number must be a valid number.');
+                }
+
+                [$whole, $fraction] = $comps;
+
+                return [
+                    new BigNumber($whole),
+                    new BigNumber($fraction),
+                    strlen($comps[1]),
+                    $negative1 ?? false
+                ];
+            }
+
+            $bn = new BigNumber($number);
+            if (isset($negative1)) {
+                $bn = $bn->multiply($negative1);
+            }
+        } elseif (is_string($number)) {
+            $number = mb_strtolower($number);
+
+            if (self::isNegative($number)) {
+                $count = 1;
+                $number = str_replace('-', '', $number, $count);
+                $negative1 = new BigNumber(-1);
+            }
+            if (self::isZeroPrefixed($number) || preg_match('/^[0-9a-f]+$/i', $number) === 1) {
+                $number = self::stripZero($number);
+                $bn = new BigNumber($number, 16);
+            } elseif (empty($number)) {
+                $bn = new BigNumber(0);
+            } else {
+                throw new InvalidArgumentException('toBn number must be valid hex string.');
+            }
+            if (isset($negative1)) {
+                $bn = $bn->multiply($negative1);
+            }
+        } else {
+            throw new InvalidArgumentException('toBn number must be BigNumber, string or int.');
+        }
+
+        return $bn;
+    }
+
+    /**
+     * toBytesArray
+     */
+    public static function toBytesArray(string $string): array
+    {
+        $bytes = pack('H*', $string);
+        return array_map('ord', str_split($bytes));
     }
 
     /**
@@ -330,78 +337,5 @@ class Utilities
             }
         }
         return $json;
-    }
-
-    /**
-     * toBn
-     * Change number or number string to bignumber.
-     */
-    public static function toBn(BigNumber|string|int $number): array|BigNumber
-    {
-        if ($number instanceof BigNumber){
-            $bn = $number;
-        } elseif (is_int($number)) {
-            $bn = new BigNumber($number);
-        } elseif (preg_match('/^(-{0,1})[0-9]*$/', $number)) {
-            $number = (string) $number;
-
-            if (self::isNegative($number)) {
-                $count = 1;
-                $number = str_replace('-', '', $number, $count);
-                $negative1 = new BigNumber(-1);
-            }
-            if (strpos($number, '.') > 0) {
-                $comps = explode('.', $number);
-
-                if (count($comps) > 2) {
-                    throw new InvalidArgumentException('toBn number must be a valid number.');
-                }
-
-                [$whole, $fraction] = $comps;
-
-                return [
-                    new BigNumber($whole),
-                    new BigNumber($fraction),
-                    strlen($comps[1]),
-                    $negative1 ?? false
-                ];
-            }
-
-            $bn = new BigNumber($number);
-            if (isset($negative1)) {
-                $bn = $bn->multiply($negative1);
-            }
-        } elseif (is_string($number)) {
-            $number = mb_strtolower($number);
-
-            if (self::isNegative($number)) {
-                $count = 1;
-                $number = str_replace('-', '', $number, $count);
-                $negative1 = new BigNumber(-1);
-            }
-            if (self::isZeroPrefixed($number) || preg_match('/^[0-9a-f]+$/i', $number) === 1) {
-                $number = self::stripZero($number);
-                $bn = new BigNumber($number, 16);
-            } elseif (empty($number)) {
-                $bn = new BigNumber(0);
-            } else {
-                throw new InvalidArgumentException('toBn number must be valid hex string.');
-            }
-            if (isset($negative1)) {
-                $bn = $bn->multiply($negative1);
-            }
-        } else {
-            throw new InvalidArgumentException('toBn number must be BigNumber, string or int.');
-        }
-
-        return $bn;
-    }
-
-    public static function leftPadBytes(string $bytes, int $size): string
-    {
-        if (strlen($bytes) >= $size) {
-            return $bytes;
-        }
-        return str_pad($bytes, $size, 0, STR_PAD_LEFT);
     }
 }

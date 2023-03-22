@@ -59,8 +59,7 @@ class Address extends Integer
     public function outputFormat(mixed $value, string $name): string
     {
         $address = mb_substr($value, 24, 40);
-        $bytes = pack('H*', $address);
-        $bytes = array_map('ord', str_split($bytes));
+        $bytes = Utilities::toBytesArray($address);
         $digest = array_slice($bytes, 0, 20);
         $bech32 = convertBits($digest, count($digest), 8, 5);
 

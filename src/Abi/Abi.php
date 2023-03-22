@@ -73,9 +73,14 @@ class Abi
     public function getSignatureFingerprint($methodName): string
     {
         $signature = $this->getMethodSignature($methodName);
-        $hash = hash('sha3-256', $signature);
+        $hash = Utilities::sha3($signature);
 
         return substr($hash, 0, 8);
+    }
+
+    public function stripSignatureFingerprint($data): string
+    {
+        return substr(Utilities::toHex($data), 8);
     }
 
     public function getParameterTypes($methodName): string
@@ -114,9 +119,7 @@ class Abi
 
     public function decode($methodName, $data): ?array
     {
-        // Strip signature from data
-        $data = substr(Utilities::toHex($data), 8);
-
+        $data = $this->stripSignatureFingerprint($data);
         $types = $this->getParameterTypes($methodName);
         $types = explode(',', $types);
 
