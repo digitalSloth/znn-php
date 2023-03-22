@@ -20,22 +20,8 @@ class Handler
         return $this->encodeParameters([$type], [$param]);
     }
 
-    public function encodeParameters(stdClass|array $types, array $params): string
+    public function encodeParameters(array $types, array $params): string
     {
-//        // change json to array
-//        if ($types instanceof stdClass && isset($types->inputs)) {
-//            $types = Utilities::jsonToArray($types);
-//        }
-//        if (is_array($types) && isset($types['inputs'])) {
-//            $inputTypes = $types;
-//            $types = [];
-//
-//            foreach ($inputTypes['inputs'] as $input) {
-//                if (isset($input['type'])) {
-//                    $types[] = $input['type'];
-//                }
-//            }
-//        }
         if (count($types) !== count($params)) {
             throw new InvalidArgumentException('encodeParameters number of types must equal to number of params.');
         }
@@ -67,23 +53,8 @@ class Handler
         return $this->decodeParameters([$type], $param)[0];
     }
 
-    public function decodeParameters(stdClass|array $types, string $param): array
+    public function decodeParameters(array $types, string $param): array
     {
-        // change json to array
-//        if ($types instanceof stdClass && isset($types->outputs)) {
-//            $types = Utilities::jsonToArray($types);
-//        }
-//        if (is_array($types) && isset($types['outputs'])) {
-//            $outputTypes = $types;
-//            $types = [];
-//
-//            foreach ($outputTypes['outputs'] as $output) {
-//                if (isset($output['type'])) {
-//                    $types[] = $output['type'];
-//                }
-//            }
-//        }
-
         $typesLength = count($types);
         $solidityTypes = $this->getSolidityTypes($types);
         $offsets = array_fill(0, $typesLength, 0);

@@ -112,13 +112,7 @@ class Abi
         return implode(',', $inputs);
     }
 
-
-
-
-
-
-
-    public function decode($methodName, $data): array
+    public function decode($methodName, $data): ?array
     {
         // Strip signature from data
         $data = substr(Utilities::toHex($data), 8);
@@ -133,9 +127,11 @@ class Abi
                 throw new DecodeException($ex->getMessage());
             }
         }
+
+        return null;
     }
 
-    public function encode($methodName, $data): string
+    public function encode($methodName, $data): ?string
     {
         $signature = $this->getSignatureFingerprint($methodName);
 
@@ -153,5 +149,7 @@ class Abi
                 throw new EncodeException($ex->getMessage());
             }
         }
+
+        return null;
     }
 }
