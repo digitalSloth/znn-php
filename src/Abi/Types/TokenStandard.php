@@ -59,8 +59,7 @@ class TokenStandard extends Integer
     public function outputFormat(mixed $value, string $name): string
     {
         $token = mb_substr($value, 24, 40);
-        $bytes = pack('H*', $token);
-        $bytes = array_map('ord', str_split($bytes));
+        $bytes = Utilities::toBytesArray($token);
         $digest = array_slice($bytes, 10, 10);
         $bech32 = convertBits($digest, count($digest), 8, 5);
 
