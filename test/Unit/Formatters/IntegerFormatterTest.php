@@ -1,9 +1,10 @@
 <?php
 
-namespace DigitalSloth\ZnnPhp\Tests\Unit;
+namespace DigitalSloth\ZnnPhp\Test\Unit\Formatters;
 
-use DigitalSloth\ZnnPhp\Tests\TestCase;
-use Web3\Formatters\IntegerFormatter;
+use DigitalSloth\ZnnPhp\Formatters\FormatterInterface;
+use DigitalSloth\ZnnPhp\Formatters\IntegerFormatter;
+use DigitalSloth\ZnnPhp\Test\TestCase;
 
 class IntegerFormatterTest extends TestCase
 {
@@ -12,7 +13,7 @@ class IntegerFormatterTest extends TestCase
      *
      * @var \Web3\Formatters\IntegerFormatter
      */
-    protected $formatter;
+    protected FormatterInterface $formatter;
 
     /**
      * setUp
@@ -30,7 +31,7 @@ class IntegerFormatterTest extends TestCase
      *
      * @return void
      */
-    public function testFormat()
+    public function testFormat(): void
     {
         $formatter = $this->formatter;
 

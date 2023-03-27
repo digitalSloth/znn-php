@@ -1,10 +1,11 @@
 <?php
 
-namespace DigitalSloth\ZnnPhp\Tests\Unit;
+namespace DigitalSloth\ZnnPhp\Test\Unit\Formatters;
 
-use DigitalSloth\ZnnPhp\Tests\TestCase;
-use phpseclib3\Math\BigInteger as BigNumber;
-use Web3\Formatters\BigNumberFormatter;
+use DigitalSloth\ZnnPhp\Formatters\FormatterInterface;
+use phpseclib\Math\BigInteger as BigNumber;
+use DigitalSloth\ZnnPhp\Formatters\BigNumberFormatter;
+use DigitalSloth\ZnnPhp\Test\TestCase;
 
 class BigNumberFormatterTest extends TestCase
 {
@@ -13,7 +14,7 @@ class BigNumberFormatterTest extends TestCase
      *
      * @var \Web3\Formatters\BigNumberFormatter
      */
-    protected $formatter;
+    protected FormatterInterface $formatter;
 
     /**
      * setUp
@@ -31,12 +32,12 @@ class BigNumberFormatterTest extends TestCase
      *
      * @return void
      */
-    public function testFormat()
+    public function testFormat(): void
     {
         $formatter = $this->formatter;
 
         $bigNumber = $formatter->format(1);
-        $this->assertEquals($bigNumber->toString(), '1');
-        $this->assertTrue($bigNumber instanceof BigNumber);
+        $this->assertEquals('1', $bigNumber->toString());
+        $this->assertInstanceOf(BigNumber::class, $bigNumber);
     }
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace DigitalSloth\ZnnPhp\Tests\Unit;
+namespace DigitalSloth\ZnnPhp\Test\Unit\Abi\Types;
 
-use InvalidArgumentException;
-use DigitalSloth\ZnnPhp\Tests\TestCase;
+use DigitalSloth\ZnnPhp\Abi\Types\TypeInterface;
 use DigitalSloth\ZnnPhp\Abi\Types\Uinteger;
+use DigitalSloth\ZnnPhp\Test\TestCase;
 
 class UintegerTypeTest extends TestCase
 {
@@ -13,7 +13,7 @@ class UintegerTypeTest extends TestCase
      *
      * @var array
      */
-    protected $testTypes = [
+    protected array $testTypes = [
         [
             'value' => 'uint',
             'result' => true
@@ -38,15 +38,18 @@ class UintegerTypeTest extends TestCase
         ], [
             'value' => 'uint64[4]',
             'result' => true
+        ], [
+            'value' => 'uint64[4]',
+            'result' => true
         ],
     ];
 
     /**
      * solidityType
      *
-     * @var \Web3\Contracts\SolidityType
+     * @var TypeInterface
      */
-    protected $solidityType;
+    protected TypeInterface $type;
 
     /**
      * setUp
@@ -56,7 +59,7 @@ class UintegerTypeTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->solidityType = new Uinteger;
+        $this->type = new Uinteger;
     }
 
     /**
@@ -64,12 +67,12 @@ class UintegerTypeTest extends TestCase
      *
      * @return void
      */
-    public function testIsType()
+    public function testIsType(): void
     {
-        $solidityType = $this->solidityType;
+        $typeClass = $this->type;
 
         foreach ($this->testTypes as $type) {
-            $this->assertEquals($solidityType->isType($type['value']), $type['result']);
+            $this->assertEquals($type['result'], $typeClass->isType($type['value']));
         }
     }
 }

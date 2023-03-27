@@ -1,9 +1,10 @@
 <?php
 
-namespace DigitalSloth\ZnnPhp\Tests\Unit;
+namespace DigitalSloth\ZnnPhp\Test\Unit\Formatters;
 
-use DigitalSloth\ZnnPhp\Tests\TestCase;
-use Web3\Formatters\StringFormatter;
+use DigitalSloth\ZnnPhp\Formatters\FormatterInterface;
+use DigitalSloth\ZnnPhp\Formatters\StringFormatter;
+use DigitalSloth\ZnnPhp\Test\TestCase;
 
 class StringFormatterTest extends TestCase
 {
@@ -12,7 +13,7 @@ class StringFormatterTest extends TestCase
      *
      * @var \Web3\Formatters\StringFormatter
      */
-    protected $formatter;
+    protected FormatterInterface $formatter;
 
     /**
      * setUp

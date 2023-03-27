@@ -1,10 +1,10 @@
 <?php
 
-namespace DigitalSloth\ZnnPhp\Tests\Unit;
+namespace DigitalSloth\ZnnPhp\Test\Unit\Abi\Types;
 
-use InvalidArgumentException;
-use DigitalSloth\ZnnPhp\Tests\TestCase;
 use DigitalSloth\ZnnPhp\Abi\Types\Boolean;
+use DigitalSloth\ZnnPhp\Abi\Types\TypeInterface;
+use DigitalSloth\ZnnPhp\Test\TestCase;
 
 class BooleanTypeTest extends TestCase
 {
@@ -13,7 +13,7 @@ class BooleanTypeTest extends TestCase
      *
      * @var array
      */
-    protected $testTypes = [
+    protected array $testTypes = [
         [
             'value' => 'bool',
             'result' => true
@@ -38,9 +38,9 @@ class BooleanTypeTest extends TestCase
     /**
      * solidityType
      *
-     * @var \Web3\Contracts\SolidityType
+     * @var TypeInterface
      */
-    protected $solidityType;
+    protected TypeInterface $type;
 
     /**
      * setUp
@@ -50,7 +50,7 @@ class BooleanTypeTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->solidityType = new Boolean;
+        $this->type = new Boolean;
     }
 
     /**
@@ -60,10 +60,10 @@ class BooleanTypeTest extends TestCase
      */
     public function testIsType()
     {
-        $solidityType = $this->solidityType;
+        $typeClass = $this->type;
 
         foreach ($this->testTypes as $type) {
-            $this->assertEquals($solidityType->isType($type['value']), $type['result']);
+            $this->assertEquals($type['result'], $typeClass->isType($type['value']));
         }
     }
 }

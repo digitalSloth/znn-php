@@ -1,9 +1,10 @@
 <?php
 
-namespace DigitalSloth\ZnnPhp\Tests\Unit;
+namespace DigitalSloth\ZnnPhp\Test\Unit\Formatters;
 
-use DigitalSloth\ZnnPhp\Tests\TestCase;
-use Web3\Formatters\NumberFormatter;
+use DigitalSloth\ZnnPhp\Formatters\FormatterInterface;
+use DigitalSloth\ZnnPhp\Formatters\NumberFormatter;
+use DigitalSloth\ZnnPhp\Test\TestCase;
 
 class NumberFormatterTest extends TestCase
 {
@@ -12,7 +13,7 @@ class NumberFormatterTest extends TestCase
      *
      * @var \Web3\Formatters\NumberFormatter
      */
-    protected $formatter;
+    protected FormatterInterface $formatter;
 
     /**
      * setUp
@@ -30,11 +31,11 @@ class NumberFormatterTest extends TestCase
      *
      * @return void
      */
-    public function testFormat()
+    public function testFormat(): void
     {
         $formatter = $this->formatter;
 
         $number= $formatter->format('123');
-        $this->assertEquals($number, 123);
+        $this->assertEquals(123, $number);
     }
 }

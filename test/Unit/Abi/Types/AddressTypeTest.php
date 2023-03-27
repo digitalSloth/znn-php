@@ -1,10 +1,10 @@
 <?php
 
-namespace DigitalSloth\ZnnPhp\Tests\Unit;
+namespace DigitalSloth\ZnnPhp\Test\Unit\Abi\Types;
 
 use DigitalSloth\ZnnPhp\Abi\Types\TypeInterface;
-use DigitalSloth\ZnnPhp\Tests\TestCase;
 use DigitalSloth\ZnnPhp\Abi\Types\Address;
+use DigitalSloth\ZnnPhp\Test\TestCase;
 
 class AddressTypeTest extends TestCase
 {
@@ -13,7 +13,7 @@ class AddressTypeTest extends TestCase
      *
      * @var array
      */
-    protected $testTypes = [
+    protected array $testTypes = [
         [
             'value' => 'address',
             'result' => true
@@ -56,7 +56,7 @@ class AddressTypeTest extends TestCase
      *
      * @return void
      */
-    public function testIsType()
+    public function testIsType(): void
     {
         $typeClass = $this->type;
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace DigitalSloth\ZnnPhp\Tests\Unit;
+namespace DigitalSloth\ZnnPhp\Test\Unit\Formatters;
 
-use InvalidArgumentException;
-use DigitalSloth\ZnnPhp\Tests\TestCase;
-use Web3\Formatters\BooleanFormatter;
+use DigitalSloth\ZnnPhp\Formatters\FormatterInterface;
+use DigitalSloth\ZnnPhp\Formatters\BooleanFormatter;
+use DigitalSloth\ZnnPhp\Test\TestCase;
 
 class BooleanFormatterTest extends TestCase
 {
@@ -13,7 +13,7 @@ class BooleanFormatterTest extends TestCase
      *
      * @var \Web3\Formatters\BooleanFormatter
      */
-    protected $formatter;
+    protected FormatterInterface $formatter;
 
     /**
      * setUp
@@ -31,20 +31,20 @@ class BooleanFormatterTest extends TestCase
      *
      * @return void
      */
-    public function testFormat()
+    public function testFormat(): void
     {
         $formatter = $this->formatter;
 
         $boolean = $formatter->format(true);
-        $this->assertEquals($boolean, true);
+        $this->assertEquals(true, $boolean);
 
         $boolean = $formatter->format(1);
-        $this->assertEquals($boolean, true);
+        $this->assertEquals(true, $boolean);
 
         $boolean = $formatter->format(false);
-        $this->assertEquals($boolean, false);
+        $this->assertEquals(false, $boolean);
 
         $boolean = $formatter->format(0);
-        $this->assertEquals($boolean, false);
+        $this->assertEquals(false, $boolean);
     }
 }

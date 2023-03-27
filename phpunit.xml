@@ -9,8 +9,8 @@
          processIsolation="false"
          stopOnFailure="false">
 
-    <testsuite name="ZNN-PHP unit test">
-        <directory suffix="Test.php">./test/unit</directory>
+    <testsuite name="ZNN-PHP Unit tests">
+        <directory suffix="Test.php">./tests/Unit</directory>
     </testsuite>
 
     <filter>

@@ -1,9 +1,10 @@
 <?php
 
-namespace DigitalSloth\ZnnPhp\Tests\Unit;
+namespace DigitalSloth\ZnnPhp\Test\Unit\Formatters;
 
-use DigitalSloth\ZnnPhp\Tests\TestCase;
-use Web3\Formatters\HexFormatter;
+use DigitalSloth\ZnnPhp\Formatters\FormatterInterface;
+use DigitalSloth\ZnnPhp\Formatters\HexFormatter;
+use DigitalSloth\ZnnPhp\Test\TestCase;
 
 class HexFormatterTest extends TestCase
 {
@@ -12,7 +13,7 @@ class HexFormatterTest extends TestCase
      *
      * @var \Web3\Formatters\HexFormatter
      */
-    protected $formatter;
+    protected FormatterInterface $formatter;
 
     /**
      * setUp
@@ -30,20 +31,20 @@ class HexFormatterTest extends TestCase
      *
      * @return void
      */
-    public function testFormat()
+    public function testFormat(): void
     {
         $formatter = $this->formatter;
 
         $hex = $formatter->format('ae');
-        $this->assertEquals($hex, '0x6165');
+        $this->assertEquals('0x6165', $hex);
 
         $hex = $formatter->format('0xabce');
-        $this->assertEquals($hex, '0xabce');
+        $this->assertEquals('0xabce', $hex);
 
         $hex = $formatter->format('123');
-        $this->assertEquals($hex, '0x7b');
+        $this->assertEquals('0x313233', $hex);
 
         $hex = $formatter->format(12);
-        $this->assertEquals($hex, '0xc');
+        $this->assertEquals('0x3132', $hex);
     }
 }
