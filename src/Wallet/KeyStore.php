@@ -27,7 +27,7 @@ class KeyStore
         return new KeyStore($mnemonic);
     }
 
-    public static function fromEntropy(string $entropy)
+    public static function fromEntropy(string $entropy): KeyStore
     {
         $mnemonicGenerator = BIP39::Entropy($entropy);
         $mnemonic = $mnemonicGenerator->words;
@@ -35,7 +35,7 @@ class KeyStore
         return new KeyStore(implode(' ', $mnemonic));
     }
 
-    public static function random()
+    public static function random(): KeyStore
     {
         return self::fromEntropy(random_bytes(32));
     }
