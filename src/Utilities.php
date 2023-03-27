@@ -6,31 +6,19 @@ use BitWasp\Bech32;
 use BitWasp\Bech32\Exception\Bech32Exception;
 use Elliptic\EdDSA;
 use InvalidArgumentException;
-use kornrunner\Keccak;
-use phpseclib3\Math\BigInteger as BigNumber;
+use phpseclib\Math\BigInteger as BigNumber;
 use stdClass;
 
 class Utilities
 {
-    /**
-     * SHA3_NULL_HASH
-     */
-    public const SHA3_NULL_HASH = 'c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
-
-
     public static function addressFromPublicKey(string $publicKey): bool|string
     {
         $hrp = 'z';
-        $hash = hash('sha3-256', hex2bin($publicKey), true);
-        $binary = [0];
-
-        // Convert hash to bytes array
-        for ($i = 0, $iMax = strlen($hash); $i < $iMax; $i++) {
-            $binary[] = ord($hash[$i]);
-        }
+        $data = self::sha3($publicKey);
+        $data = [0, ...self::toBytesArray($data)];
 
         // Get first 20 array elements
-        $digest = array_slice($binary, 0, 20);
+        $digest = array_slice($data, 0, 20);
 
         // bech32 and convert to address
         try {
@@ -94,10 +82,6 @@ class Utilities
     {
         return substr(static::toHex($data), 0, 8);
     }
-
-
-
-
 
     /**
      * toHex
@@ -173,53 +157,15 @@ class Utilities
      */
     public static function isAddress(string $value): bool
     {
-        if (preg_match('/^(0x|0X)?[a-f0-9A-F]{40}$/', $value) !== 1) {
+        if(! str_starts_with($value, 'z')) {
             return false;
         }
 
-        if (preg_match('/^(0x|0X)?[a-f0-9]{40}$/', $value) === 1 || preg_match('/^(0x|0X)?[A-F0-9]{40}$/', $value) === 1) {
-            return true;
+        if (strlen($value) !== 40) {
+            return false;
         }
 
-        return self::isAddressChecksum($value);
-    }
-
-    /**
-     * isAddressChecksum
-     */
-    public static function isAddressChecksum(string $value): bool
-    {
-        $value = self::stripZero($value);
-        $hash = self::stripZero(self::sha3(mb_strtolower($value)));
-
-        for ($i = 0; $i < 40; $i++) {
-            if (
-                (intval($hash[$i], 16) > 7 && mb_strtoupper($value[$i]) !== $value[$i]) ||
-                (intval($hash[$i], 16) <= 7 && mb_strtolower($value[$i]) !== $value[$i])
-            ) {
-                return false;
-            }
-        }
         return true;
-    }
-
-    /**
-     * toChecksumAddress
-     */
-    public static function toChecksumAddress(string $value): string
-    {
-        $value = self::stripZero(strtolower($value));
-        $hash = self::stripZero(self::sha3($value));
-        $ret = '0x';
-
-        for ($i = 0; $i < 40; $i++) {
-            if (intval($hash[$i], 16) >= 8) {
-                $ret .= strtoupper($value[$i]);
-            } else {
-                $ret .= $value[$i];
-            }
-        }
-        return $ret;
     }
 
     /**
@@ -234,19 +180,24 @@ class Utilities
      * sha3
      * keccak256
      */
-    public static function sha3(string $value): ?string
+    public static function sha3(string $value, bool $addPrefix = false): ?string
     {
         if (str_starts_with($value, '0x')) {
             $value = self::hexToBin($value);
         }
 
-        $hash = Keccak::hash($value, 256);
+        //$hash = Keccak::hash($value, 256);
+        $hash = hash('sha3-256' , $value);
 
-        if ($hash === self::SHA3_NULL_HASH) {
+        if ($hash === 'efbde2c3aee204a69b7696d4b10ff31137fe78e3946306284f806e2dfc68b805') {
             return null;
         }
 
-        return '0x' . $hash;
+//        if ($addPrefix) {
+//            return '0x' . $hash;
+//        }
+
+        return $hash;
     }
 
     /**
@@ -255,6 +206,15 @@ class Utilities
     public static function toString(mixed $value): string
     {
         return (string) $value;
+    }
+
+    /**
+     * toBytesArray
+     */
+    public static function toBytesArray(string $string): array
+    {
+        $bytes = pack('H*', $string);
+        return array_map('ord', str_split($bytes));
     }
 
     /**
@@ -350,6 +310,7 @@ class Utilities
                 $number = str_replace('-', '', $number, $count);
                 $negative1 = new BigNumber(-1);
             }
+
             if (strpos($number, '.') > 0) {
                 $comps = explode('.', $number);
 
@@ -395,13 +356,5 @@ class Utilities
         }
 
         return $bn;
-    }
-
-    public static function leftPadBytes(string $bytes, int $size): string
-    {
-        if (strlen($bytes) >= $size) {
-            return $bytes;
-        }
-        return str_pad($bytes, $size, 0, STR_PAD_LEFT);
     }
 }
