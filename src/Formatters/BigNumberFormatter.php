@@ -3,7 +3,7 @@
 namespace DigitalSloth\ZnnPhp\Formatters;
 
 use DigitalSloth\ZnnPhp\Utilities;
-use phpseclib\Math\BigInteger;
+use phpseclib3\Math\BigInteger;
 
 class BigNumberFormatter implements FormatterInterface
 {

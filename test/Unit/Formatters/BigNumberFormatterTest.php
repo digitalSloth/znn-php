@@ -3,7 +3,7 @@
 namespace DigitalSloth\ZnnPhp\Test\Unit\Formatters;
 
 use DigitalSloth\ZnnPhp\Formatters\FormatterInterface;
-use phpseclib\Math\BigInteger as BigNumber;
+use phpseclib3\Math\BigInteger as BigNumber;
 use DigitalSloth\ZnnPhp\Formatters\BigNumberFormatter;
 use DigitalSloth\ZnnPhp\Test\TestCase;
 

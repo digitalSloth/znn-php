@@ -6,8 +6,7 @@ use BitWasp\Bech32;
 use BitWasp\Bech32\Exception\Bech32Exception;
 use Elliptic\EdDSA;
 use InvalidArgumentException;
-use phpseclib\Math\BigInteger as BigNumber;
-use stdClass;
+use phpseclib3\Math\BigInteger as BigNumber;
 
 class Utilities
 {
@@ -89,7 +88,7 @@ class Utilities
      */
     public static function toHex(mixed $value, bool $isPrefix = false): string
     {
-        if (is_numeric($value) && !is_string($value)) {
+        if (is_numeric($value)) {
             // turn to hex number
             $bn = self::toBn($value);
             $hex = $bn->toHex(self::isNegative($value));
@@ -109,6 +108,7 @@ class Utilities
         if ($isPrefix) {
             return '0x'.$hex;
         }
+
         return $hex;
     }
 
@@ -186,16 +186,15 @@ class Utilities
             $value = self::hexToBin($value);
         }
 
-        //$hash = Keccak::hash($value, 256);
         $hash = hash('sha3-256' , $value);
 
-        if ($hash === 'efbde2c3aee204a69b7696d4b10ff31137fe78e3946306284f806e2dfc68b805') {
+        if ($hash === 'a7ffc6f8bf1ed76651c14756a061d662f580ff4de43b49fa82d80a4b80f8434a') {
             return null;
         }
 
-//        if ($addPrefix) {
-//            return '0x' . $hash;
-//        }
+        if ($addPrefix) {
+            return '0x' . $hash;
+        }
 
         return $hash;
     }
@@ -218,85 +217,10 @@ class Utilities
     }
 
     /**
-     * jsonMethodToString
-     */
-    public static function jsonMethodToString(stdClass|array $json): string
-    {
-        if ($json instanceof stdClass) {
-            // one way to change whole json stdClass to array type
-            // $jsonString = json_encode($json);
-
-            // if (JSON_ERROR_NONE !== json_last_error()) {
-            //     throw new InvalidArgumentException('json_decode error: ' . json_last_error_msg());
-            // }
-            // $json = json_decode($jsonString, true);
-
-            // another way to change whole json to array type but need the depth
-            // $json = self::jsonToArray($json, $depth)
-
-            // another way to change json to array type but not whole json stdClass
-            $json = (array) $json;
-            $typeName = [];
-
-            foreach ($json['inputs'] as $param) {
-                if (isset($param->type)) {
-                    $typeName[] = $param->type;
-                }
-            }
-            return $json['name'] . '(' . implode(',', $typeName) . ')';
-        }
-
-        if (isset($json['name']) && strpos($json['name'], '(') > 0) {
-            return $json['name'];
-        }
-
-        $typeName = [];
-
-        foreach ($json['inputs'] as $param) {
-            if (isset($param['type'])) {
-                $typeName[] = $param['type'];
-            }
-        }
-
-        return $json['name'] . '(' . implode(',', $typeName) . ')';
-    }
-
-    /**
-     * jsonToArray
-     */
-    public static function jsonToArray(stdClass|array $json): array
-    {
-        if ($json instanceof stdClass) {
-            $json = (array) $json;
-
-            foreach ($json as $key => $param) {
-                if (is_array($param)) {
-                    foreach ($param as $subKey => $subParam) {
-                        $json[$key][$subKey] = self::jsonToArray($subParam);
-                    }
-                } elseif ($param instanceof stdClass) {
-                    $json[$key] = self::jsonToArray($param);
-                }
-            }
-        } elseif (is_array($json)) {
-            foreach ($json as $key => $param) {
-                if (is_array($param)) {
-                    foreach ($param as $subKey => $subParam) {
-                        $json[$key][$subKey] = self::jsonToArray($subParam);
-                    }
-                } elseif ($param instanceof stdClass) {
-                    $json[$key] = self::jsonToArray($param);
-                }
-            }
-        }
-        return $json;
-    }
-
-    /**
      * toBn
      * Change number or number string to bignumber.
      */
-    public static function toBn(BigNumber|string|int $number): array|BigNumber
+    public static function toBn(mixed $number): array|BigNumber
     {
         if ($number instanceof BigNumber){
             $bn = $number;
@@ -306,8 +230,7 @@ class Utilities
             $number = (string) $number;
 
             if (self::isNegative($number)) {
-                $count = 1;
-                $number = str_replace('-', '', $number, $count);
+                $number = str_replace('-', '', $number);
                 $negative1 = new BigNumber(-1);
             }
 
@@ -340,6 +263,7 @@ class Utilities
                 $number = str_replace('-', '', $number, $count);
                 $negative1 = new BigNumber(-1);
             }
+
             if (self::isZeroPrefixed($number) || preg_match('/^[0-9a-f]+$/i', $number) === 1) {
                 $number = self::stripZero($number);
                 $bn = new BigNumber($number, 16);

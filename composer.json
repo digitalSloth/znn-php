@@ -16,10 +16,12 @@
         "guzzlehttp/guzzle": "^7.0",
         "simplito/elliptic-php": "^1.0",
         "textalk/websocket": "^1.5",
-        "phpseclib/phpseclib": "^3.0"
+        "phpseclib/phpseclib": "^3.0",
+        "furqansiddiqui/bip39-mnemonic-php": "^0.1.7"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.0"
+        "phpunit/phpunit": "^8.0",
+      "ext-mbstring": "*"
     },
     "autoload": {
         "psr-4": {
@@ -29,7 +31,7 @@
     "autoload-dev": {
         "psr-4": {
             "DigitalSloth\\ZnnPhp\\Examples\\": "examples",
-            "DigitalSloth\\ZnnPhp\\Tests\\": "tests"
+            "DigitalSloth\\ZnnPhp\\Test\\": "test"
         }
     }
 }

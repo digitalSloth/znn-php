@@ -10,7 +10,7 @@
          stopOnFailure="false">
 
     <testsuite name="ZNN-PHP Unit tests">
-        <directory suffix="Test.php">./tests/Unit</directory>
+        <directory suffix="Test.php">./test/Unit</directory>
     </testsuite>
 
     <filter>
