@@ -11,7 +11,7 @@ class StringFormatterTest extends TestCase
     /**
      * formatter
      *
-     * @var \Web3\Formatters\StringFormatter
+     * @var FormatterInterface
      */
     protected FormatterInterface $formatter;
 

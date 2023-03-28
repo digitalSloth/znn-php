@@ -11,7 +11,7 @@ class IntegerFormatterTest extends TestCase
     /**
      * formatter
      *
-     * @var \Web3\Formatters\IntegerFormatter
+     * @var FormatterInterface
      */
     protected FormatterInterface $formatter;
 

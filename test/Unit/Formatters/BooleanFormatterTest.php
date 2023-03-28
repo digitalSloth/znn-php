@@ -11,7 +11,7 @@ class BooleanFormatterTest extends TestCase
     /**
      * formatter
      *
-     * @var \Web3\Formatters\BooleanFormatter
+     * @var FormatterInterface
      */
     protected FormatterInterface $formatter;
 

@@ -11,7 +11,7 @@ class HexFormatterTest extends TestCase
     /**
      * formatter
      *
-     * @var \Web3\Formatters\HexFormatter
+     * @var FormatterInterface
      */
     protected FormatterInterface $formatter;
 

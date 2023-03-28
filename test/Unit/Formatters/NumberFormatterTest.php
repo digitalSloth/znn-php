@@ -11,7 +11,7 @@ class NumberFormatterTest extends TestCase
     /**
      * formatter
      *
-     * @var \Web3\Formatters\NumberFormatter
+     * @var FormatterInterface
      */
     protected FormatterInterface $formatter;
 

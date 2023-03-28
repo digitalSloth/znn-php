@@ -12,7 +12,7 @@ class BigNumberFormatterTest extends TestCase
     /**
      * formatter
      *
-     * @var \Web3\Formatters\BigNumberFormatter
+     * @var FormatterInterface
      */
     protected FormatterInterface $formatter;
 
