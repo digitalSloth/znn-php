@@ -15,32 +15,36 @@ class Utilities
         $hrp = 'z';
         $data = self::sha3($publicKey);
         $data = [0, ...self::toBytesArray($data)];
-
-        // Get first 20 array elements
         $digest = array_slice($data, 0, 20);
 
-        // bech32 and convert to address
         try {
             $bech32 = Bech32\convertBits($digest, count($digest), 8, 5);
+            return Bech32\encode($hrp, $bech32);
         } catch (Bech32Exception $e) {
             return false;
         }
-
-        return Bech32\encode($hrp, $bech32);
     }
 
+    /**
+     * verifySignedMessage
+     * Validates the message and signature checking they originated from given public key
+     */
     public static function verifySignedMessage(string $publicKey, string $message, string $signature): bool
     {
         $ec = new EdDSA('ed25519');
         try {
             $key = $ec->keyFromPublic($publicKey);
-            $message = bin2hex(utf8_encode($message));
+            $message = bin2hex(mb_convert_encoding($message, 'UTF-8'));
             return $key->verify($message, $signature);
         } catch (\Exception $exception) {
             return false;
         }
     }
 
+    /**
+     * guessAbiMethod
+     * Attempts to guess the contract and method from a given data string.
+     */
     public static function guessAbiMethod(string $data): ?array
     {
         $fingerprint = substr(self::toHex($data), 0, 8);
@@ -63,7 +67,7 @@ class Utilities
             $methods = $abi->getMethods();
 
             foreach ($methods as $method) {
-                $methodFingerprint = $abi->getSignatureFingerprint($method);
+                $methodFingerprint = $abi->getMethodFingerprint($method);
 
                 if ($fingerprint === $methodFingerprint) {
                     return [
@@ -77,6 +81,10 @@ class Utilities
         return null;
     }
 
+    /**
+     * getDataFingerprint
+     * Get the 8 digit fingerprint of from the data provided
+     */
     public static function getDataFingerprint(string $data): string
     {
         return substr(static::toHex($data), 0, 8);
@@ -178,7 +186,6 @@ class Utilities
 
     /**
      * sha3
-     * keccak256
      */
     public static function sha3(string $value, bool $addPrefix = false): ?string
     {

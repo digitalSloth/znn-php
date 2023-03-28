@@ -49,17 +49,6 @@ class Abi
         return $methods;
     }
 
-    public function checkMethodName($methodName): string
-    {
-        foreach ($this->abi as $abi) {
-            if ($abi['name'] === $methodName) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public function getMethodSignature($methodName): string
     {
         if ($this->checkMethodName($methodName)) {
@@ -70,17 +59,12 @@ class Abi
         return utf8_encode("{$methodName}()");
     }
 
-    public function getSignatureFingerprint($methodName): string
+    public function getMethodFingerprint($methodName): string
     {
         $signature = $this->getMethodSignature($methodName);
         $hash = Utilities::sha3($signature);
 
         return substr($hash, 0, 8);
-    }
-
-    public function stripSignatureFingerprint($data): string
-    {
-        return substr(Utilities::toHex($data), 8);
     }
 
     public function getParameterTypes($methodName): string
@@ -119,7 +103,7 @@ class Abi
 
     public function decode($methodName, $data): array
     {
-        $data = $this->stripSignatureFingerprint($data);
+        $data = $this->stripFingerprint($data);
         $types = $this->getParameterTypes($methodName);
         $types = explode(',', $types);
 
@@ -127,28 +111,43 @@ class Abi
             try {
                 return $this->handler->decodeParameters($types, $data);
             } catch (\Exception $ex) {
-                throw new DecodeException($ex->getMessage());
+                throw new DecodeException($ex);
             }
         }
     }
 
-    public function encode($methodName, $data): string
+    public function encode($methodName, $data): ?string
     {
-        $signature = $this->getSignatureFingerprint($methodName);
-
+        $signature = $this->getMethodFingerprint($methodName);
         $types = $this->getParameterTypes($methodName);
         $types = explode(',', $types);
 
         if (! empty($data)) {
             try {
-
                 $output = $this->handler->encodeParameters($types, $data);
                 $output = $signature . Utilities::stripZero($output);
-
                 return Utilities::hexToBin($output);
             } catch (\Exception $ex) {
-                throw new EncodeException($ex->getMessage());
+                throw new EncodeException($ex);
             }
         }
+
+        return null;
+    }
+
+    private function checkMethodName($methodName): string
+    {
+        foreach ($this->abi as $abi) {
+            if ($abi['name'] === $methodName) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function stripFingerprint($data): string
+    {
+        return substr(Utilities::toHex($data), 8);
     }
 }
