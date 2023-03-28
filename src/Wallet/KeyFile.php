@@ -22,14 +22,16 @@ class KeyFile
         $baseAddress = 'z1qrq4h28kd6u47e8mrf5juqwfff3sdgvw7xfrfc';
         $salt = random_bytes(16);
 
-        $key = bin2hex(sodium_crypto_pwhash(
-            32,
-            $password,
-            $salt,
-            SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE,
-            SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE,
-            SODIUM_CRYPTO_PWHASH_ALG_ARGON2ID13
-        ));
+        $time = 1;
+        $memory = 64 * 1024;
+        $parallelism = 4;
+        $hashLength = 32;
+
+//        $command = 'echo '.$password.' | argon2 '.$salt.' -id -l '.$hashLength.' -t '.$time.' -p '.$parallelism.' -k '.$memory;
+//        $result = \Illuminate\Support\Facades\Process::run($command);
+//        $key = $result->output();
+
+        $key = 'XXX';
 
         [$encrypted, $aesNonce] = Encryptor::setKey('key.hash')->encrypt('Buffer.from(store.entropy, "hex")');
 
@@ -57,21 +59,16 @@ class KeyFile
         $encrypted = Utilities::stripZero($json->crypto->cipherData);
         $aesNonce = Utilities::stripZero($json->crypto->nonce);
 
-        $key = bin2hex(sodium_crypto_pwhash(
-            32,
-            $password,
-            hex2bin($salt),
-            1,
-            64 * 1024,
-            SODIUM_CRYPTO_PWHASH_ALG_ARGON2ID13
-        ));
+        $time = 1;
+        $memory = 64 * 1024;
+        $parallelism = 4;
+        $hashLength = 32;
 
-//        const aesCipher = aes256gcm(key.hash);
-//        const entropy = aesCipher.decrypt(
-//                Buffer.from(encrypted.substr(0, encrypted.length - 32), 'hex'),
-//                Buffer.from(aesNonce, 'hex'),
-//                Buffer.from(encrypted.substr(encrypted.length - 32, 32), 'hex'),
-//            ).subarray(0, 32);
+//        $command = 'echo '.$password.' | argon2 '.$salt.' -id -l '.$hashLength.' -t '.$time.' -p '.$parallelism.' -k '.$memory;
+//        $result = \Illuminate\Support\Facades\Process::run($command);
+//        $key = $result->output();
+
+        $key = 'XXX';
 
         [$encrypted, $aesNonce] = Encryptor::setKey($key)->decrypt(
             pack('H*', substr($encrypted, 0, strlen($encrypted) - 32)),

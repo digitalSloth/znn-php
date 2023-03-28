@@ -41,17 +41,15 @@ class Encryptor
 
     public function decrypt(string $encrypted, string $iv, string $authTag)
     {
-        $decrypted = openssl_decrypt(
-            $encrypted,
-            $this->cipher,
-            $this->key,
-            OPENSSL_RAW_DATA,
-            $iv,
-            $authTag,
-            'zenon',
-        );
-
-        dd($decrypted);
+//        $decrypted = openssl_decrypt(
+//            $encrypted,
+//            $this->cipher,
+//            $this->key,
+//            OPENSSL_RAW_DATA,
+//            $iv,
+//            $authTag,
+//            'zenon',
+//        );
 
 //        // decrypt decodes base64-encoded ciphertext into a utf8-encoded string
 //

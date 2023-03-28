@@ -16,7 +16,6 @@ class KeyPair
         $this->publicKey = $ec->keyFromSecret($this->privateKey)->getPublic('hex');
     }
 
-
     public static function fromPrivateKey(string $privateKey): KeyPair
     {
         return new KeyPair($privateKey);

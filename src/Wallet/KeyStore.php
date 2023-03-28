@@ -14,13 +14,10 @@ class KeyStore
     public function __construct(
         public string $mnemonic
     ) {
-
         $mnemonicGenerator = BIP39::Words($this->mnemonic);
-
         $this->entropy = $mnemonicGenerator->entropy;
         $this->seed = $mnemonicGenerator->generateSeed($this->mnemonic);
     }
-
 
     public static function fromMnemonic(string $mnemonic): KeyStore
     {
@@ -39,7 +36,6 @@ class KeyStore
     {
         return self::fromEntropy(random_bytes(32));
     }
-
 
     public function getKeyPair(int $index = 0)
     {
