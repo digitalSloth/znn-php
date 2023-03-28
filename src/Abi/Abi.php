@@ -53,10 +53,10 @@ class Abi
     {
         if ($this->checkMethodName($methodName)) {
             $inputs = $this->getParameterTypes($methodName);
-            return utf8_encode("{$methodName}($inputs)");
+            return mb_convert_encoding("{$methodName}($inputs)", 'UTF-8');
         }
 
-        return utf8_encode("{$methodName}()");
+        return mb_convert_encoding("{$methodName}()", 'UTF-8');
     }
 
     public function getMethodFingerprint($methodName): string
@@ -101,7 +101,7 @@ class Abi
         return implode(',', $inputs);
     }
 
-    public function decode($methodName, $data): array
+    public function decode($methodName, $data): ?array
     {
         $data = $this->stripFingerprint($data);
         $types = $this->getParameterTypes($methodName);
@@ -114,6 +114,8 @@ class Abi
                 throw new DecodeException($ex);
             }
         }
+
+        return null;
     }
 
     public function encode($methodName, $data): ?string
