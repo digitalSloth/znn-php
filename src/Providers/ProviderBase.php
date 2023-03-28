@@ -85,7 +85,7 @@ class ProviderBase
             $response = $this->processHttpResponse();
         }
 
-        if($response) {
+        if ($response) {
             $data = json_decode($response);
 
             if (isset($data->error)) {

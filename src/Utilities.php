@@ -31,8 +31,8 @@ class Utilities
      */
     public static function verifySignedMessage(string $publicKey, string $message, string $signature): bool
     {
-        $ec = new EdDSA('ed25519');
         try {
+            $ec = new EdDSA('ed25519');
             $key = $ec->keyFromPublic($publicKey);
             $message = bin2hex(mb_convert_encoding($message, 'UTF-8'));
             return $key->verify($message, $signature);
@@ -47,11 +47,11 @@ class Utilities
      */
     public static function guessAbiMethod(string $data): ?array
     {
-        $fingerprint = substr(self::toHex($data), 0, 8);
+        $fingerprint = self::getFingerprintFromData($data);
 
         $contracts = [
             'Accelerator' => Abi\Contracts\Accelerator::class,
-            'Bridge' => Abi\Contracts\Bridge::class,
+            //'Bridge' => Abi\Contracts\Bridge::class,
             'Common' => Abi\Contracts\Common::class,
             'Htlc' => Abi\Contracts\Htlc::class,
             'Pillar' => Abi\Contracts\Pillar::class,
@@ -96,7 +96,8 @@ class Utilities
      */
     public static function toHex(mixed $value, bool $isPrefix = false): string
     {
-        if (is_numeric($value)) {
+		// if (is_numeric($value)) {
+        if (is_numeric($value) && !is_string($value)) {
             // turn to hex number
             $bn = self::toBn($value);
             $hex = $bn->toHex(self::isNegative($value));
@@ -165,7 +166,7 @@ class Utilities
      */
     public static function isAddress(string $value): bool
     {
-        if(! str_starts_with($value, 'z')) {
+        if (! str_starts_with($value, 'z')) {
             return false;
         }
 
@@ -212,15 +213,6 @@ class Utilities
     public static function toString(mixed $value): string
     {
         return (string) $value;
-    }
-
-    /**
-     * toBytesArray
-     */
-    public static function toBytesArray(string $string): array
-    {
-        $bytes = pack('H*', $string);
-        return array_map('ord', str_split($bytes));
     }
 
     /**
@@ -279,6 +271,7 @@ class Utilities
             } else {
                 throw new InvalidArgumentException('toBn number must be valid hex string.');
             }
+
             if (isset($negative1)) {
                 $bn = $bn->multiply($negative1);
             }
@@ -287,5 +280,14 @@ class Utilities
         }
 
         return $bn;
+    }
+
+    /**
+     * toBytesArray
+     */
+    public static function toBytesArray(string $string): array
+    {
+        $bytes = pack('H*', $string);
+        return array_map('ord', str_split($bytes));
     }
 }

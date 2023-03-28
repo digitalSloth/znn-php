@@ -67,15 +67,5 @@ class Htlc extends Abi
             'name' => 'AllowProxyUnlock',
             'inputs' => [],
         ],
-        [
-            'type' => 'function',
-            'name' => 'htlcProxyUnlockInfo',
-            'inputs' => [
-                [
-                    'name' => 'allowed',
-                    'type' => 'bool',
-                ],
-            ],
-        ],
     ];
 }

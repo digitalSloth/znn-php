@@ -67,6 +67,11 @@ class Abi
         return substr($hash, 0, 8);
     }
 
+    public function stripSignatureFingerprint($data): string
+    {
+        return substr(Utilities::toHex($data), 8);
+    }
+
     public function getParameterTypes($methodName): string
     {
         $inputs = [];
