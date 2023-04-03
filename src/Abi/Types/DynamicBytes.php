@@ -2,21 +2,11 @@
 
 namespace DigitalSloth\ZnnPhp\Abi\Types;
 
+use DigitalSloth\ZnnPhp\Utilities;
 use InvalidArgumentException;
-use Web3\Utils;
 
-class DynamicBytes extends BaseType implements IType
+class DynamicBytes extends BaseType implements TypeInterface
 {
-    /**
-     * construct
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
     /**
      * isType
      *
@@ -47,22 +37,24 @@ class DynamicBytes extends BaseType implements IType
      */
     public function inputFormat(mixed $value, string $name): string
     {
-        if (!Utils::isHex($value)) {
+        if (! Utilities::isHex($value)) {
             throw new InvalidArgumentException('The value to inputFormat must be hex bytes.');
         }
-        $value = Utils::stripZero($value);
+
+        $value = Utilities::stripZero($value);
 
         if (mb_strlen($value) % 2 !== 0) {
             $value = "0" . $value;
-            // throw new InvalidArgumentException('The value to inputFormat has invalid length.');
         }
-        $bn = Utils::toBn(floor(mb_strlen($value) / 2));
+
+        $bn = Utilities::toBn(floor(mb_strlen($value) / 2));
         $bnHex = $bn->toHex(true);
         $padded = mb_substr($bnHex, 0, 1);
 
         if ($padded !== '0' && $padded !== 'f') {
             $padded = '0';
         }
+
         $l = floor((mb_strlen($value) + 63) / 64);
         $padding = (($l * 64 - mb_strlen($value) + 1) >= 0) ? $l * 64 - mb_strlen($value) : 0;
 
@@ -83,7 +75,8 @@ class DynamicBytes extends BaseType implements IType
         if (empty($checkZero)) {
             return '0';
         }
-        $size = intval(Utils::toBn('0x' . mb_substr($value, 0, 64))->toString());
+
+        $size = (int) Utilities::toBn('0x' . mb_substr($value, 0, 64))->toString();
         $length = 2 * $size;
 
         return '0x' . mb_substr($value, 64, $length);

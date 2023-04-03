@@ -2,60 +2,11 @@
 
 namespace DigitalSloth\ZnnPhp\Abi\Types;
 
-use Web3\Utils;
-use Web3\Formatters\IntegerFormatter;
+use DigitalSloth\ZnnPhp\Utilities;
+use DigitalSloth\ZnnPhp\Formatters\IntegerFormatter;
 
 class BaseType
 {
-    /**
-     * construct
-     *
-     * @return void
-     */
-    // public function  __construct() {}
-
-    /**
-     * get
-     *
-     * @param string $name
-     * @return mixed
-     */
-    public function __get(string $name)
-    {
-        $method = 'get' . ucfirst($name);
-
-        if (method_exists($this, $method)) {
-            return call_user_func_array([$this, $method], []);
-        }
-        return false;
-    }
-
-    /**
-     * set
-     *
-     * @param string $name
-     * @param mixed $value
-     * @return mixed;
-     */
-    public function __set(string $name, mixed $value)
-    {
-        $method = 'set' . ucfirst($name);
-
-        if (method_exists($this, $method)) {
-            return call_user_func_array([$this, $method], [$value]);
-        }
-        return false;
-    }
-
-    /**
-     * callStatic
-     *
-     * @param string $name
-     * @param array $arguments
-     * @return void
-     */
-    // public static function __callStatic($name, $arguments) {}
-
     /**
      * nestedTypes
      *
@@ -193,8 +144,9 @@ class BaseType
                 $result[] = $this->encode($val, $nestedName);
             }
             return $result;
-        } elseif ($this->isStaticArray($name)) {
-            $length = $this->staticArrayLength($name);
+        }
+
+        if ($this->isStaticArray($name)) {
             $nestedName = $this->nestedName($name);
             $result = [];
 
@@ -203,6 +155,7 @@ class BaseType
             }
             return $result;
         }
+
         return $this->inputFormat($value, $name);
     }
 
@@ -217,8 +170,8 @@ class BaseType
     public function decode(mixed $value, string $offset, string $name): mixed
     {
         if ($this->isDynamicArray($name)) {
-            $arrayOffset = (int) Utils::toBn('0x' . mb_substr($value, $offset * 2, 64))->toString();
-            $length = (int) Utils::toBn('0x' . mb_substr($value, $arrayOffset * 2, 64))->toString();
+            $arrayOffset = (int) Utilities::toBn('0x' . mb_substr($value, $offset * 2, 64))->toString();
+            $length = (int) Utilities::toBn('0x' . mb_substr($value, $arrayOffset * 2, 64))->toString();
             $arrayStart = $arrayOffset + 32;
 
             $nestedName = $this->nestedName($name);
@@ -230,7 +183,9 @@ class BaseType
                 $result[] = $this->decode($value, $arrayStart + $i, $nestedName);
             }
             return $result;
-        } elseif ($this->isStaticArray($name)) {
+        }
+
+        if ($this->isStaticArray($name)) {
             $length = $this->staticArrayLength($name);
             $arrayStart = $offset;
 
@@ -243,13 +198,16 @@ class BaseType
                 $result[] = $this->decode($value, $arrayStart + $i, $nestedName);
             }
             return $result;
-        } elseif ($this->isDynamicType()) {
-            $dynamicOffset = (int) Utils::toBn('0x' . mb_substr($value, $offset * 2, 64))->toString();
-            $length = (int) Utils::toBn('0x' . mb_substr($value, $dynamicOffset * 2, 64))->toString();
+        }
+
+        if ($this->isDynamicType()) {
+            $dynamicOffset = (int) Utilities::toBn('0x' . mb_substr($value, $offset * 2, 64))->toString();
+            $length = (int) Utilities::toBn('0x' . mb_substr($value, (int) ($dynamicOffset * 2), 64))->toString();
             $roundedLength = floor(($length + 31) / 32);
-            $param = mb_substr($value, $dynamicOffset * 2, ( 1 + $roundedLength) * 64);
+            $param = mb_substr($value, (int) ($dynamicOffset * 2), (int) ((1 + $roundedLength) * 64));
             return $this->outputFormat($param, $name);
         }
+
         $length = $this->staticPartLength($name);
         $param = mb_substr($value, $offset * 2, $length * 2);
 

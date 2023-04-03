@@ -2,10 +2,9 @@
 
 namespace DigitalSloth\ZnnPhp\Abi\Types;
 
-use Web3\Utils;
-use Web3\Formatters\IntegerFormatter;
+use DigitalSloth\ZnnPhp\Formatters\IntegerFormatter;
 
-class Hash extends BaseType implements IType
+class Hash extends BaseType implements TypeInterface
 {
     /**
      * construct
@@ -48,15 +47,6 @@ class Hash extends BaseType implements IType
      */
     public function inputFormat(mixed $value, string $name): string
     {
-        $value = (string) $value;
-
-        if (Utils::isAddress($value)) {
-            $value = mb_strtolower($value);
-
-            if (Utils::isZeroPrefixed($value)) {
-                $value = Utils::stripZero($value);
-            }
-        }
         return IntegerFormatter::format($value);
     }
 

@@ -1,6 +1,8 @@
 <?php
 
-namespace DigitalSloth\ZnnPhp\Abi;
+namespace DigitalSloth\ZnnPhp\Abi\Contracts;
+
+use DigitalSloth\ZnnPhp\Abi\Abi;
 
 class Common extends Abi
 {

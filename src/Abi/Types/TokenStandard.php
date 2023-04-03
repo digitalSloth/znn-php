@@ -2,21 +2,13 @@
 
 namespace DigitalSloth\ZnnPhp\Abi\Types;
 
-use Web3\Utils;
-use Web3\Formatters\IntegerFormatter;
+use DigitalSloth\ZnnPhp\Utilities;
+use function BitWasp\Bech32\convertBits;
+use function BitWasp\Bech32\decode;
+use function BitWasp\Bech32\encode;
 
-class TokenStandard extends BaseType implements IType
+class TokenStandard extends Integer
 {
-    /**
-     * construct
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
     /**
      * isType
      *
@@ -48,16 +40,13 @@ class TokenStandard extends BaseType implements IType
      */
     public function inputFormat(mixed $value, string $name): string
     {
-        $value = (string) $value;
+        $value = decode($value)[1];
+        $value = convertBits($value, count($value),5, 8, false);
+        $value = array_pad($value, -32, 0);
+        $value = array_map('chr', $value);
+        $value = implode($value);
 
-        if (Utils::isAddress($value)) {
-            $value = mb_strtolower($value);
-
-            if (Utils::isZeroPrefixed($value)) {
-                $value = Utils::stripZero($value);
-            }
-        }
-        return IntegerFormatter::format($value);
+        return Utilities::toHex($value);
     }
 
     /**
@@ -69,6 +58,11 @@ class TokenStandard extends BaseType implements IType
      */
     public function outputFormat(mixed $value, string $name): string
     {
-        return '0x' . mb_substr($value, 24, 40);
+        $token = mb_substr($value, 24, 40);
+        $bytes = Utilities::toBytesArray($token);
+        $digest = array_slice($bytes, 10, 10);
+        $bech32 = convertBits($digest, count($digest), 8, 5);
+
+        return encode('zts', $bech32);
     }
 }

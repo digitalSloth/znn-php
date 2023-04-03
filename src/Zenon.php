@@ -3,7 +3,10 @@
 namespace DigitalSloth\ZnnPhp;
 
 use DigitalSloth\ZnnPhp\Providers\Accelerator;
+use DigitalSloth\ZnnPhp\Providers\Bridge;
+use DigitalSloth\ZnnPhp\Providers\Htlc;
 use DigitalSloth\ZnnPhp\Providers\Ledger;
+use DigitalSloth\ZnnPhp\Providers\Liquidity;
 use DigitalSloth\ZnnPhp\Providers\Pillar;
 use DigitalSloth\ZnnPhp\Providers\Plasma;
 use DigitalSloth\ZnnPhp\Providers\Sentinel;
@@ -32,6 +35,31 @@ class Zenon
     protected ?WsClient $wsClient = null;
 
     /**
+     * @var Accelerator
+     */
+    public Accelerator $accelerator;
+
+    /**
+     * @var Bridge
+     */
+    public Bridge $bridge;
+
+    /**
+     * @var Htlc
+     */
+    public Htlc $htlc;
+
+    /**
+     * @var Ledger
+     */
+    public Ledger $ledger;
+
+    /**
+     * @var Liquidity
+     */
+    public Liquidity $liquidity;
+
+    /**
      * @var Pillar
      */
     public Pillar $pillar;
@@ -40,11 +68,6 @@ class Zenon
      * @var Plasma
      */
     public Plasma $plasma;
-
-    /**
-     * @var Accelerator
-     */
-    public Accelerator $accelerator;
 
     /**
      * @var Sentinel
@@ -57,6 +80,11 @@ class Zenon
     public Stake $stake;
 
     /**
+     * @var Stats
+     */
+    public Stats $stats;
+
+    /**
      * @var Swap
      */
     public Swap $swap;
@@ -65,16 +93,6 @@ class Zenon
      * @var Token
      */
     public Token $token;
-
-    /**
-     * @var Ledger
-     */
-    public Ledger $ledger;
-
-    /**
-     * @var Stats
-     */
-    public Stats $stats;
 
     /**
      * @param string $nodeUrl
@@ -91,14 +109,17 @@ class Zenon
             : $this->httpClient);
 
         $this->accelerator = new Accelerator($client, $throwErrors, $isWsConnection);
+        $this->bridge = new Bridge($client, $throwErrors, $isWsConnection);
+        $this->htlc = new Htlc($client, $throwErrors, $isWsConnection);
+        $this->ledger = new Ledger($client, $throwErrors, $isWsConnection);
+        $this->liquidity = new Liquidity($client, $throwErrors, $isWsConnection);
         $this->pillar = new Pillar($client, $throwErrors, $isWsConnection);
         $this->plasma = new Plasma($client, $throwErrors, $isWsConnection);
         $this->sentinel = new Sentinel($client, $throwErrors, $isWsConnection);
         $this->stake = new Stake($client, $throwErrors, $isWsConnection);
+        $this->stats = new Stats($client, $throwErrors, $isWsConnection);
         $this->swap = new Swap($client, $throwErrors, $isWsConnection);
         $this->token = new Token($client, $throwErrors, $isWsConnection);
-        $this->ledger = new Ledger($client, $throwErrors, $isWsConnection);
-        $this->stats = new Stats($client, $throwErrors, $isWsConnection);
 
         return $this;
     }

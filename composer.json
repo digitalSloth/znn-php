@@ -3,6 +3,7 @@
     "description": "A PHP SDK for JSON-RPC endpoints of the zenon.network",
     "minimum-stability": "stable",
     "license": "mit",
+    "version": "1.0.1",
     "authors": [
         {
             "name": "DigitalSloth",
@@ -10,14 +11,16 @@
         }
     ],
     "require": {
-        "php": ">=8.0",
+        "php": ">=8.2",
         "bitwasp/bech32": "^0.0.1",
+        "furqansiddiqui/bip39-mnemonic-php": "^0.1.7",
         "ext-json": "*",
         "guzzlehttp/guzzle": "^7.0",
+        "phpseclib/phpseclib": "^3.0",
         "simplito/elliptic-php": "^1.0",
         "textalk/websocket": "^1.5",
-        "web3p/rlp": "^0.3.5",
-        "web3p/web3.php": "^0.1.6"
+        "ext-mbstring": "*",
+		"ext-sodium": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.0"
@@ -30,7 +33,7 @@
     "autoload-dev": {
         "psr-4": {
             "DigitalSloth\\ZnnPhp\\Examples\\": "examples",
-            "DigitalSloth\\ZnnPhp\\Tests\\": "tests"
+            "DigitalSloth\\ZnnPhp\\Test\\": "test"
         }
     }
 }
