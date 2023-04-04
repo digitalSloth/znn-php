@@ -47,17 +47,19 @@ class Utilities
      */
     public static function guessAbiMethod(string $data): ?array
     {
-        $fingerprint = self::getFingerprintFromData($data);
+        $fingerprint = self::getDataFingerprint($data);
 
         $contracts = [
             'Accelerator' => Abi\Contracts\Accelerator::class,
-            //'Bridge' => Abi\Contracts\Bridge::class,
+            'Bridge' => Abi\Contracts\Bridge::class,
             'Common' => Abi\Contracts\Common::class,
             'Htlc' => Abi\Contracts\Htlc::class,
+            'Liquidity' => Abi\Contracts\Liquidity::class,
             'Pillar' => Abi\Contracts\Pillar::class,
             'Plasma' => Abi\Contracts\Plasma::class,
             'Sentinel' => Abi\Contracts\Sentinel::class,
             'Stake' => Abi\Contracts\Stake::class,
+            'Swap' => Abi\Contracts\Swap::class,
             'Token' => Abi\Contracts\Token::class,
         ];
 
