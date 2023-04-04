@@ -48,18 +48,7 @@ class Abi
 
         return $methods;
     }
-
-    public function checkMethodName($methodName): string
-    {
-        foreach ($this->abi as $abi) {
-            if ($abi['name'] === $methodName) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
+    
     public function getMethodSignature($methodName): string
     {
         if ($this->checkMethodName($methodName)) {
