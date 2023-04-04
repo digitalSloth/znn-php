@@ -64,13 +64,13 @@ class Abi
     {
         if ($this->checkMethodName($methodName)) {
             $inputs = $this->getParameterTypes($methodName);
-            return utf8_encode("{$methodName}($inputs)");
+            return mb_convert_encoding("{$methodName}($inputs)", 'UTF-8');
         }
 
-        return utf8_encode("{$methodName}()");
+        return mb_convert_encoding("{$methodName}()", 'UTF-8');
     }
 
-    public function getSignatureFingerprint($methodName): string
+    public function getMethodFingerprint($methodName): string
     {
         $signature = $this->getMethodSignature($methodName);
         $hash = Utilities::sha3($signature);
@@ -119,7 +119,7 @@ class Abi
 
     public function decode($methodName, $data): ?array
     {
-        $data = $this->stripSignatureFingerprint($data);
+        $data = $this->stripFingerprint($data);
         $types = $this->getParameterTypes($methodName);
         $types = explode(',', $types);
 
@@ -127,7 +127,7 @@ class Abi
             try {
                 return $this->handler->decodeParameters($types, $data);
             } catch (\Exception $ex) {
-                throw new DecodeException($ex->getMessage());
+                throw new DecodeException($ex);
             }
         }
 
@@ -136,23 +136,36 @@ class Abi
 
     public function encode($methodName, $data): ?string
     {
-        $signature = $this->getSignatureFingerprint($methodName);
-
+        $signature = $this->getMethodFingerprint($methodName);
         $types = $this->getParameterTypes($methodName);
         $types = explode(',', $types);
 
         if (! empty($data)) {
             try {
-
                 $output = $this->handler->encodeParameters($types, $data);
                 $output = $signature . Utilities::stripZero($output);
-
                 return Utilities::hexToBin($output);
             } catch (\Exception $ex) {
-                throw new EncodeException($ex->getMessage());
+                throw new EncodeException($ex);
             }
         }
 
         return null;
+    }
+
+    private function checkMethodName($methodName): string
+    {
+        foreach ($this->abi as $abi) {
+            if ($abi['name'] === $methodName) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function stripFingerprint($data): string
+    {
+        return substr(Utilities::toHex($data), 8);
     }
 }

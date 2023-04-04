@@ -7,7 +7,7 @@ use DigitalSloth\ZnnPhp\Utilities;
 class Hash
 {
     public function __construct(
-        protected array $core
+        public array $core
     ) {}
 
     public static function parse(string $hash)

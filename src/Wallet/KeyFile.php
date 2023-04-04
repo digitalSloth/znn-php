@@ -17,23 +17,24 @@ class KeyFile
         $this->publicKey = $ec->keyFromSecret($this->privateKey)->getPublic('hex');
     }
 
-    public static function encrypt(string $store, string $password): array
+    public static function encrypt(KeyStore $store, string $password): array
     {
-        $baseAddress = 'z1qrq4h28kd6u47e8mrf5juqwfff3sdgvw7xfrfc';
+        $baseAddress = $store->baseAddress->toString();
         $salt = random_bytes(16);
-
         $time = 1;
         $memory = 64 * 1024;
         $parallelism = 4;
         $hashLength = 32;
 
-//        $command = 'echo '.$password.' | argon2 '.$salt.' -id -l '.$hashLength.' -t '.$time.' -p '.$parallelism.' -k '.$memory;
-//        $result = \Illuminate\Support\Facades\Process::run($command);
-//        $key = $result->output();
+        // TODO - returned key doesnt match expected result
+        // @see https://github.com/alien-valley/znn.js/blob/master/src/wallet/keyFile.spec.js
+        // Expected results:
+        // $baseAddress = 'z1qq9n7fpaqd8lpcljandzmx4xtku9w4ftwyg0mq';
+        // $key = 'e85a18546e4a45a09ab1312171b026fd2edd2d7957cae2360264f7425cef71d2';
+        $command = 'echo '.$password.' | argon2 '.$salt.' -id -l '.$hashLength.' -t '.$time.' -p '.$parallelism.' -k '.$memory .' -r';
+        $key = exec($command);
 
-        $key = 'XXX';
-
-        [$encrypted, $aesNonce] = Encryptor::setKey('key.hash')->encrypt('Buffer.from(store.entropy, "hex")');
+        [$encrypted, $aesNonce] = Encryptor::setKey($key)->encrypt($store->entropy);
 
         return [
             'baseAddress' => $baseAddress,
@@ -54,7 +55,6 @@ class KeyFile
     public static function decrypt(string $json, string $password): KeyFile
     {
         $json = json_decode($json);
-        $givenBaseAddress = $json->baseAddress;
         $salt = Utilities::stripZero($json->crypto->argon2Params->salt);
         $encrypted = Utilities::stripZero($json->crypto->cipherData);
         $aesNonce = Utilities::stripZero($json->crypto->nonce);
@@ -64,19 +64,21 @@ class KeyFile
         $parallelism = 4;
         $hashLength = 32;
 
-//        $command = 'echo '.$password.' | argon2 '.$salt.' -id -l '.$hashLength.' -t '.$time.' -p '.$parallelism.' -k '.$memory;
-//        $result = \Illuminate\Support\Facades\Process::run($command);
-//        $key = $result->output();
+        // TODO - returned key doesnt match expected result
+        // @see https://github.com/alien-valley/znn.js/blob/master/src/wallet/keyFile.spec.js
+        // Expected results:
+        // $key = 'e85a18546e4a45a09ab1312171b026fd2edd2d7957cae2360264f7425cef71d2';
+        $command = 'echo '.$password.' | argon2 '.$salt.' -id -l '.$hashLength.' -t '.$time.' -p '.$parallelism.' -k '.$memory .' -r';
+        $key = exec($command);
+        $key = str_replace(["\r", "\n"], '', $key);
 
-        $key = 'XXX';
+        $data = substr($encrypted, 0, strlen($encrypted) - 32);
+        $authTag = substr($encrypted, strlen($encrypted) - 32, 32);
 
-        [$encrypted, $aesNonce] = Encryptor::setKey($key)->decrypt(
-            pack('H*', substr($encrypted, 0, strlen($encrypted) - 32)),
-            pack('H*', $aesNonce),
-            pack('H*', substr($encrypted, strlen($encrypted) - 32, 32))
+        return Encryptor::setKey($key)->decrypt(
+            $data,
+            $aesNonce,
+            $authTag
         );
-
-        dd($encrypted, $aesNonce);
-
     }
 }

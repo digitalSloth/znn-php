@@ -160,13 +160,7 @@ class Handler
     {
         $result = '';
 
-
         foreach ($solidityTypes as $key => $type) {
-
-//            if($type instanceof Uinteger) {
-//                $dynamicOffset = 0;
-//            }
-
             if ($type->isDynamicType($types[$key]) || $type->isDynamicArray($types[$key])) {
                 $result .= IntegerFormatter::format($dynamicOffset);
                 $e = $this->encodeWithOffset($types[$key], $type, $encodes[$key], $dynamicOffset);

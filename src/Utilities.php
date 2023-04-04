@@ -7,7 +7,6 @@ use BitWasp\Bech32\Exception\Bech32Exception;
 use Elliptic\EdDSA;
 use InvalidArgumentException;
 use phpseclib3\Math\BigInteger as BigNumber;
-use stdClass;
 
 class Utilities
 {
@@ -26,31 +25,41 @@ class Utilities
         }
     }
 
+    /**
+     * verifySignedMessage
+     * Validates the message and signature checking they originated from given public key
+     */
     public static function verifySignedMessage(string $publicKey, string $message, string $signature): bool
     {
         try {
             $ec = new EdDSA('ed25519');
             $key = $ec->keyFromPublic($publicKey);
-            $message = bin2hex(utf8_encode($message));
+            $message = bin2hex(mb_convert_encoding($message, 'UTF-8'));
             return $key->verify($message, $signature);
         } catch (\Exception $exception) {
             return false;
         }
     }
 
+    /**
+     * guessAbiMethod
+     * Attempts to guess the contract and method from a given data string.
+     */
     public static function guessAbiMethod(string $data): ?array
     {
-        $fingerprint = self::getFingerprintFromData($data);
+        $fingerprint = self::getDataFingerprint($data);
 
         $contracts = [
             'Accelerator' => Abi\Contracts\Accelerator::class,
-            //'Bridge' => Abi\Contracts\Bridge::class,
+            'Bridge' => Abi\Contracts\Bridge::class,
             'Common' => Abi\Contracts\Common::class,
             'Htlc' => Abi\Contracts\Htlc::class,
+            'Liquidity' => Abi\Contracts\Liquidity::class,
             'Pillar' => Abi\Contracts\Pillar::class,
             'Plasma' => Abi\Contracts\Plasma::class,
             'Sentinel' => Abi\Contracts\Sentinel::class,
             'Stake' => Abi\Contracts\Stake::class,
+            'Swap' => Abi\Contracts\Swap::class,
             'Token' => Abi\Contracts\Token::class,
         ];
 
@@ -60,7 +69,9 @@ class Utilities
             $methods = $abi->getMethods();
 
             foreach ($methods as $method) {
-                if ($fingerprint === $abi->getSignatureFingerprint($method)) {
+                $methodFingerprint = $abi->getMethodFingerprint($method);
+
+                if ($fingerprint === $methodFingerprint) {
                     return [
                         'contract' => $contract,
                         'method' => $method,
@@ -72,7 +83,11 @@ class Utilities
         return null;
     }
 
-    public static function getFingerprintFromData(string $data): string
+    /**
+     * getDataFingerprint
+     * Get the 8 digit fingerprint of from the data provided
+     */
+    public static function getDataFingerprint(string $data): string
     {
         return substr(static::toHex($data), 0, 8);
     }
@@ -83,6 +98,7 @@ class Utilities
      */
     public static function toHex(mixed $value, bool $isPrefix = false): string
     {
+		// if (is_numeric($value)) {
         if (is_numeric($value) && !is_string($value)) {
             // turn to hex number
             $bn = self::toBn($value);
@@ -152,7 +168,15 @@ class Utilities
      */
     public static function isAddress(string $value): bool
     {
-        // TODO - address check
+        if (! str_starts_with($value, 'z')) {
+            return false;
+        }
+
+        if (strlen($value) !== 40) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -165,9 +189,8 @@ class Utilities
 
     /**
      * sha3
-     * keccak256
      */
-    public static function sha3(string $value): ?string
+    public static function sha3(string $value, bool $addPrefix = false): ?string
     {
         if (str_starts_with($value, '0x')) {
             $value = self::hexToBin($value);
@@ -175,8 +198,12 @@ class Utilities
 
         $hash = hash('sha3-256' , $value);
 
-        if ($hash === 'efbde2c3aee204a69b7696d4b10ff31137fe78e3946306284f806e2dfc68b805') {
+        if ($hash === 'a7ffc6f8bf1ed76651c14756a061d662f580ff4de43b49fa82d80a4b80f8434a') {
             return null;
+        }
+
+        if ($addPrefix) {
+            return '0x' . $hash;
         }
 
         return $hash;
@@ -194,7 +221,7 @@ class Utilities
      * toBn
      * Change number or number string to bignumber.
      */
-    public static function toBn(BigNumber|string|int $number): array|BigNumber
+    public static function toBn(mixed $number): array|BigNumber
     {
         if ($number instanceof BigNumber){
             $bn = $number;
@@ -204,10 +231,10 @@ class Utilities
             $number = (string) $number;
 
             if (self::isNegative($number)) {
-                $count = 1;
-                $number = str_replace('-', '', $number, $count);
+                $number = str_replace('-', '', $number);
                 $negative1 = new BigNumber(-1);
             }
+
             if (strpos($number, '.') > 0) {
                 $comps = explode('.', $number);
 
@@ -237,6 +264,7 @@ class Utilities
                 $number = str_replace('-', '', $number, $count);
                 $negative1 = new BigNumber(-1);
             }
+
             if (self::isZeroPrefixed($number) || preg_match('/^[0-9a-f]+$/i', $number) === 1) {
                 $number = self::stripZero($number);
                 $bn = new BigNumber($number, 16);
@@ -245,6 +273,7 @@ class Utilities
             } else {
                 throw new InvalidArgumentException('toBn number must be valid hex string.');
             }
+
             if (isset($negative1)) {
                 $bn = $bn->multiply($negative1);
             }
@@ -262,80 +291,5 @@ class Utilities
     {
         $bytes = pack('H*', $string);
         return array_map('ord', str_split($bytes));
-    }
-
-    /**
-     * jsonMethodToString
-     */
-    public static function jsonMethodToString(stdClass|array $json): string
-    {
-        if ($json instanceof stdClass) {
-            // one way to change whole json stdClass to array type
-            // $jsonString = json_encode($json);
-
-            // if (JSON_ERROR_NONE !== json_last_error()) {
-            //     throw new InvalidArgumentException('json_decode error: ' . json_last_error_msg());
-            // }
-            // $json = json_decode($jsonString, true);
-
-            // another way to change whole json to array type but need the depth
-            // $json = self::jsonToArray($json, $depth)
-
-            // another way to change json to array type but not whole json stdClass
-            $json = (array) $json;
-            $typeName = [];
-
-            foreach ($json['inputs'] as $param) {
-                if (isset($param->type)) {
-                    $typeName[] = $param->type;
-                }
-            }
-            return $json['name'] . '(' . implode(',', $typeName) . ')';
-        }
-
-        if (isset($json['name']) && strpos($json['name'], '(') > 0) {
-            return $json['name'];
-        }
-
-        $typeName = [];
-
-        foreach ($json['inputs'] as $param) {
-            if (isset($param['type'])) {
-                $typeName[] = $param['type'];
-            }
-        }
-
-        return $json['name'] . '(' . implode(',', $typeName) . ')';
-    }
-
-    /**
-     * jsonToArray
-     */
-    public static function jsonToArray(stdClass|array $json): array
-    {
-        if ($json instanceof stdClass) {
-            $json = (array) $json;
-
-            foreach ($json as $key => $param) {
-                if (is_array($param)) {
-                    foreach ($param as $subKey => $subParam) {
-                        $json[$key][$subKey] = self::jsonToArray($subParam);
-                    }
-                } elseif ($param instanceof stdClass) {
-                    $json[$key] = self::jsonToArray($param);
-                }
-            }
-        } elseif (is_array($json)) {
-            foreach ($json as $key => $param) {
-                if (is_array($param)) {
-                    foreach ($param as $subKey => $subParam) {
-                        $json[$key][$subKey] = self::jsonToArray($subParam);
-                    }
-                } elseif ($param instanceof stdClass) {
-                    $json[$key] = self::jsonToArray($param);
-                }
-            }
-        }
-        return $json;
     }
 }

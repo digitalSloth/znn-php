@@ -2,25 +2,19 @@
 
 namespace DigitalSloth\ZnnPhp\Model\Primitives;
 
-use DigitalSloth\ZnnPhp\Utilities;
-use function BitWasp\Bech32\convertBits;
+use function BitWasp\Bech32\decode;
 use function BitWasp\Bech32\encode;
 
 class TokenStandard
 {
     public function __construct(
-        protected array $core
-    ) {
+        public array $core
+    ) {}
 
-    }
-
-    public static function parse(string $address)
+    public static function parse(string $zts)
     {
-        $bytes = Utilities::toBytesArray($address);
-        $digest = array_slice($bytes, 0, 20);
-        $bech32 = convertBits($digest, count($digest), 8, 5);
-
-        return new TokenStandard($bech32);
+        $decoded = decode($zts);
+        return new TokenStandard($decoded[1]);
     }
 
     public function toString()
