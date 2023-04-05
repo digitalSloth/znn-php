@@ -48,7 +48,7 @@ class Abi
 
         return $methods;
     }
-    
+
     public function getMethodSignature($methodName): string
     {
         if ($this->checkMethodName($methodName)) {

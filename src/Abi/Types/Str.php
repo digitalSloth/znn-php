@@ -70,7 +70,7 @@ class Str extends BaseType implements TypeInterface
         $match = [];
 
         if (preg_match('/^[0]+([a-f0-9]+)$/', $strLen, $match) === 1) {
-            $strLen = BigNumberFormatter::format('0x' . $match[1]);
+            $strLen = BigNumberFormatter::format('0x' . $match[1])->toString();
         }
 
         $strValue = mb_substr($strValue, 0, (int) $strLen * 2);
