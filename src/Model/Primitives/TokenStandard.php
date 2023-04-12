@@ -11,14 +11,14 @@ class TokenStandard
         public array $core
     ) {}
 
-    public static function parse(string $zts)
+    public static function parse(string $zts): TokenStandard
     {
         $decoded = decode($zts);
         return new TokenStandard($decoded[1]);
     }
 
-    public function toString()
+    public function toString(): string
     {
-        return encode('z', $this->core);
+        return encode('zts', $this->core);
     }
 }

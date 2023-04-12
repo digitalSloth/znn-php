@@ -10,20 +10,20 @@ class Hash
         public array $core
     ) {}
 
-    public static function parse(string $hash)
+    public static function parse(string $hash): Hash
     {
         $bytes = Utilities::toBytesArray($hash);
         return new Hash($bytes);
     }
 
-    public static function digest($data)
+    public static function digest($data): Hash
     {
         $hash = Utilities::sha3($data);
         $data = Utilities::toBytesArray($hash);
         return new Hash($data);
     }
 
-    public function toString()
+    public function toString(): string
     {
         $value = array_map('chr', $this->core);
         $value = implode($value);

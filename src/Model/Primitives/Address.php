@@ -11,13 +11,13 @@ class Address
         public array $core
     ) {}
 
-    public static function parse(string $address)
+    public static function parse(string $address): Address
     {
         $decoded = decode($address);
         return new Address($decoded[1]);
     }
 
-    public function toString()
+    public function toString(): string
     {
         return encode('z', $this->core);
     }
