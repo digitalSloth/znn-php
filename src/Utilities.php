@@ -2,27 +2,32 @@
 
 namespace DigitalSloth\ZnnPhp;
 
-use BitWasp\Bech32;
-use BitWasp\Bech32\Exception\Bech32Exception;
+use DigitalSloth\ZnnPhp\Model\Primitives\Address;
+use DigitalSloth\ZnnPhp\Model\Primitives\Hash;
+use DigitalSloth\ZnnPhp\Model\Primitives\TokenStandard;
 use Elliptic\EdDSA;
 use InvalidArgumentException;
 use phpseclib3\Math\BigInteger as BigNumber;
+use function BitWasp\Bech32\convertBits;
 
 class Utilities
 {
     public static function addressFromPublicKey(string $publicKey): bool|string
     {
-        $hrp = 'z';
-        $data = self::sha3($publicKey);
-        $data = [0, ...self::toBytesArray($data)];
+        $hash = Hash::digest($publicKey);
+        $data = [0, ...$hash->core];
         $digest = array_slice($data, 0, 20);
+        $bech32 = convertBits($digest, count($digest), 8, 5);
+        return (new Address($bech32))->toString();
+    }
 
-        try {
-            $bech32 = Bech32\convertBits($digest, count($digest), 8, 5);
-            return Bech32\encode($hrp, $bech32);
-        } catch (Bech32Exception $e) {
-            return false;
-        }
+    public static function ztsFromHash(string $hash): bool|string
+    {
+        $data = self::hexToBin($hash);
+        $hash = Hash::digest($data);
+        $data = array_slice($hash->core, 0, 10);
+        $bech32 = convertBits($data, count($data), 8, 5);
+        return (new TokenStandard($bech32))->toString();
     }
 
     /**
