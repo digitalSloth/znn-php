@@ -10,7 +10,7 @@ class Liquidity extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @return array
      * @throws Exception
      */
-    public function GetLiquidityInfo(): array
+    public function getLiquidityInfo(): array
     {
         $this->makeRequest('embedded.liquidity.getLiquidityInfo')
             ->processResponse();
@@ -22,7 +22,7 @@ class Liquidity extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @return array
      * @throws Exception
      */
-    public function GetSecurityInfo(): array
+    public function getSecurityInfo(): array
     {
         $this->makeRequest('embedded.liquidity.getSecurityInfo')
             ->processResponse();
@@ -37,7 +37,7 @@ class Liquidity extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @return array
      * @throws Exception
      */
-    public function GetLiquidityStakeEntriesByAddress(string $address, int $pageIndex = 0, int $pageSize = 1000): array
+    public function getLiquidityStakeEntriesByAddress(string $address, int $pageIndex = 0, int $pageSize = 1000): array
     {
         $this->makeRequest('embedded.liquidity.getLiquidityStakeEntriesByAddress', [$address, $pageIndex, $pageSize])
             ->processResponse();
@@ -50,7 +50,7 @@ class Liquidity extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @return array
      * @throws Exception
      */
-    public function GetUncollectedReward(string $address): array
+    public function getUncollectedReward(string $address): array
     {
         $this->makeRequest('embedded.liquidity.getUncollectedReward', [$address])
             ->processResponse();
@@ -65,7 +65,7 @@ class Liquidity extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @return array
      * @throws Exception
      */
-    public function GetFrontierRewardByPage(string $address, int $pageIndex = 0, int $pageSize = 1000): array
+    public function getFrontierRewardByPage(string $address, int $pageIndex = 0, int $pageSize = 1000): array
     {
         $this->makeRequest('embedded.liquidity.getFrontierRewardByPage', [$address, $pageIndex, $pageSize])
             ->processResponse();
@@ -77,7 +77,7 @@ class Liquidity extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @return array
      * @throws Exception
      */
-    public function GetTimeChallengesInfo(): array
+    public function getTimeChallengesInfo(): array
     {
         $this->makeRequest('embedded.liquidity.getTimeChallengesInfo')
             ->processResponse();
