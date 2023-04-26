@@ -12,7 +12,7 @@ class Liquidity extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      */
     public function GetLiquidityInfo(): array
     {
-        $this->makeRequest('embedded.liquidity.GetLiquidityInfo')
+        $this->makeRequest('embedded.liquidity.getLiquidityInfo')
             ->processResponse();
 
         return $this->result;
@@ -24,7 +24,7 @@ class Liquidity extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      */
     public function GetSecurityInfo(): array
     {
-        $this->makeRequest('embedded.liquidity.GetSecurityInfo')
+        $this->makeRequest('embedded.liquidity.getSecurityInfo')
             ->processResponse();
 
         return $this->result;
@@ -39,7 +39,7 @@ class Liquidity extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      */
     public function GetLiquidityStakeEntriesByAddress(string $address, int $pageIndex = 0, int $pageSize = 1000): array
     {
-        $this->makeRequest('embedded.liquidity.GetLiquidityStakeEntriesByAddress', [$address, $pageIndex, $pageSize])
+        $this->makeRequest('embedded.liquidity.getLiquidityStakeEntriesByAddress', [$address, $pageIndex, $pageSize])
             ->processResponse();
 
         return $this->result;
@@ -52,7 +52,7 @@ class Liquidity extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      */
     public function GetUncollectedReward(string $address): array
     {
-        $this->makeRequest('embedded.liquidity.GetUncollectedReward', [$address])
+        $this->makeRequest('embedded.liquidity.getUncollectedReward', [$address])
             ->processResponse();
 
         return $this->result;
@@ -67,7 +67,7 @@ class Liquidity extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      */
     public function GetFrontierRewardByPage(string $address, int $pageIndex = 0, int $pageSize = 1000): array
     {
-        $this->makeRequest('embedded.liquidity.GetFrontierRewardByPage', [$address, $pageIndex, $pageSize])
+        $this->makeRequest('embedded.liquidity.getFrontierRewardByPage', [$address, $pageIndex, $pageSize])
             ->processResponse();
 
         return $this->result;
@@ -79,7 +79,7 @@ class Liquidity extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      */
     public function GetTimeChallengesInfo(): array
     {
-        $this->makeRequest('embedded.liquidity.GetTimeChallengesInfo')
+        $this->makeRequest('embedded.liquidity.getTimeChallengesInfo')
             ->processResponse();
 
         return $this->result;

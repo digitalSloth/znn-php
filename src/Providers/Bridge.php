@@ -12,7 +12,7 @@ class Bridge extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      */
     public function GetBridgeInfo(): array
     {
-        $this->makeRequest('embedded.bridge.GetBridgeInfo')
+        $this->makeRequest('embedded.bridge.getBridgeInfo')
             ->processResponse();
 
         return $this->result;
@@ -24,7 +24,7 @@ class Bridge extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      */
     public function GetSecurityInfo(): array
     {
-        $this->makeRequest('embedded.bridge.GetSecurityInfo')
+        $this->makeRequest('embedded.bridge.getSecurityInfo')
             ->processResponse();
 
         return $this->result;
@@ -36,7 +36,7 @@ class Bridge extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      */
     public function GetOrchestratorInfo(): array
     {
-        $this->makeRequest('embedded.bridge.GetOrchestratorInfo')
+        $this->makeRequest('embedded.bridge.getOrchestratorInfo')
             ->processResponse();
 
         return $this->result;
@@ -48,7 +48,7 @@ class Bridge extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      */
     public function GetTimeChallengesInfo(): array
     {
-        $this->makeRequest('embedded.bridge.GetTimeChallengesInfo')
+        $this->makeRequest('embedded.bridge.getTimeChallengesInfo')
             ->processResponse();
 
         return $this->result;
@@ -62,7 +62,7 @@ class Bridge extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      */
     public function GetNetworkInfo(int $networkClass, int $chainId): array
     {
-        $this->makeRequest('embedded.bridge.GetNetworkInfo', [$networkClass, $chainId])
+        $this->makeRequest('embedded.bridge.getNetworkInfo', [$networkClass, $chainId])
             ->processResponse();
 
         return $this->result;
@@ -76,7 +76,7 @@ class Bridge extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      */
     public function GetAllNetworks(int $pageIndex = 0, int $pageSize = 1000): array
     {
-        $this->makeRequest('embedded.bridge.GetAllNetworks', [$pageIndex, $pageSize])
+        $this->makeRequest('embedded.bridge.getAllNetworks', [$pageIndex, $pageSize])
             ->processResponse();
 
         return $this->result;
@@ -119,7 +119,7 @@ class Bridge extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      */
     public function GetWrapTokenRequestById(string $id): array
     {
-        $this->makeRequest('embedded.bridge.GetWrapTokenRequestById', [$id])
+        $this->makeRequest('embedded.bridge.getWrapTokenRequestById', [$id])
             ->processResponse();
 
         return $this->result;
@@ -133,7 +133,7 @@ class Bridge extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      */
     public function GetAllWrapTokenRequests(int $pageIndex = 0, int $pageSize = 1000): array
     {
-        $this->makeRequest('embedded.bridge.GetAllWrapTokenRequests', [$pageIndex, $pageSize])
+        $this->makeRequest('embedded.bridge.getAllWrapTokenRequests', [$pageIndex, $pageSize])
             ->processResponse();
 
         return $this->result;
@@ -148,7 +148,7 @@ class Bridge extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      */
     public function GetAllWrapTokenRequestsByToAddress(string $toAddress, int $pageIndex = 0, int $pageSize = 1000): array
     {
-        $this->makeRequest('embedded.bridge.GetAllWrapTokenRequestsByToAddress', [$toAddress, $pageIndex, $pageSize])
+        $this->makeRequest('embedded.bridge.getAllWrapTokenRequestsByToAddress', [$toAddress, $pageIndex, $pageSize])
             ->processResponse();
 
         return $this->result;
@@ -164,7 +164,7 @@ class Bridge extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      */
     public function GetAllWrapTokenRequestsByToAddressNetworkClassAndChainId(string $toAddress, string $networkClass, int $pageIndex, int $pageSize): array
     {
-        $this->makeRequest('embedded.bridge.GetAllWrapTokenRequestsByToAddressNetworkClassAndChainId', [$toAddress, $networkClass, $pageIndex, $pageSize])
+        $this->makeRequest('embedded.bridge.getAllWrapTokenRequestsByToAddressNetworkClassAndChainId', [$toAddress, $networkClass, $pageIndex, $pageSize])
             ->processResponse();
 
         return $this->result;
@@ -178,7 +178,7 @@ class Bridge extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      */
     public function GetAllUnsignedWrapTokenRequests(int $pageIndex = 0, int $pageSize = 1000): array
     {
-        $this->makeRequest('embedded.bridge.GetAllUnsignedWrapTokenRequests', [$pageIndex, $pageSize])
+        $this->makeRequest('embedded.bridge.getAllUnsignedWrapTokenRequests', [$pageIndex, $pageSize])
             ->processResponse();
 
         return $this->result;
@@ -192,7 +192,7 @@ class Bridge extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      */
     public function GetUnwrapTokenRequestByHashAndLog(string $txHash, int $logIndex): array
     {
-        $this->makeRequest('embedded.bridge.GetUnwrapTokenRequestByHashAndLog', [$txHash, $logIndex])
+        $this->makeRequest('embedded.bridge.getUnwrapTokenRequestByHashAndLog', [$txHash, $logIndex])
             ->processResponse();
 
         return $this->result;
@@ -206,7 +206,7 @@ class Bridge extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      */
     public function GetAllUnwrapTokenRequests(int $pageIndex = 0, int $pageSize = 1000): array
     {
-        $this->makeRequest('embedded.bridge.GetAllUnwrapTokenRequests', [$pageIndex, $pageSize])
+        $this->makeRequest('embedded.bridge.getAllUnwrapTokenRequests', [$pageIndex, $pageSize])
             ->processResponse();
 
         return $this->result;
@@ -221,7 +221,7 @@ class Bridge extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      */
     public function GetAllUnwrapTokenRequestsByToAddress(string $toAddress, int $pageIndex = 0, int $pageSize = 1000): array
     {
-        $this->makeRequest('embedded.bridge.GetAllUnwrapTokenRequestsByToAddress', [$toAddress, $pageIndex, $pageSize])
+        $this->makeRequest('embedded.bridge.getAllUnwrapTokenRequestsByToAddress', [$toAddress, $pageIndex, $pageSize])
             ->processResponse();
 
         return $this->result;
@@ -234,7 +234,7 @@ class Bridge extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      */
     public function GetFeeTokenPair(string $zts): array
     {
-        $this->makeRequest('embedded.bridge.GetFeeTokenPair', [$zts])
+        $this->makeRequest('embedded.bridge.getFeeTokenPair', [$zts])
             ->processResponse();
 
         return $this->result;
