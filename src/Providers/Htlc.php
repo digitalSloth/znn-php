@@ -11,7 +11,7 @@ class Htlc extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @return array
      * @throws Exception
      */
-    public function GetById(string $id): array
+    public function getById(string $id): array
     {
         $this->makeRequest('embedded.htlc.getById', [$id])
             ->processResponse();
@@ -24,7 +24,7 @@ class Htlc extends \DigitalSloth\ZnnPhp\Providers\ProviderBase
      * @return array
      * @throws Exception
      */
-    public function GetProxyUnlockStatus(string $address): array
+    public function getProxyUnlockStatus(string $address): array
     {
         $this->makeRequest('embedded.htlc.getProxyUnlockStatus', [$address])
             ->processResponse();
