@@ -9,6 +9,16 @@ class Common extends Abi
     protected array $abi = [
         [
             'type' => 'function',
+            'name' => 'Update',
+            'inputs' => [],
+        ],
+        [
+            'type' => 'function',
+            'name' => 'CollectReward',
+            'inputs' => [],
+        ],
+        [
+            'type' => 'function',
             'name' => 'DepositQsr',
             'inputs' => [],
         ],
@@ -19,8 +29,40 @@ class Common extends Abi
         ],
         [
             'type' => 'function',
-            'name' => 'CollectReward',
+            'name' => 'Donate',
             'inputs' => [],
+        ],
+        [
+            'type' => 'function',
+            'name' => 'VoteByName',
+            'inputs' => [
+                [
+                    'name' => 'id',
+                    'type' => 'hash',
+                ],
+                [
+                    'name' => 'name',
+                    'type' => 'string',
+                ],
+                [
+                    'name' => 'vote',
+                    'type' => 'uint8',
+                ],
+            ],
+        ],
+        [
+            'type' => 'function',
+            'name' => 'VoteByProdAddress',
+            'inputs' => [
+                [
+                    'name' => 'id',
+                    'type' => 'hash',
+                ],
+                [
+                    'name' => 'vote',
+                    'type' => 'uint8',
+                ],
+            ],
         ],
     ];
 }
