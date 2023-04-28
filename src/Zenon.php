@@ -15,7 +15,6 @@ use DigitalSloth\ZnnPhp\Providers\Stats;
 use DigitalSloth\ZnnPhp\Providers\Swap;
 use DigitalSloth\ZnnPhp\Providers\Token;
 use GuzzleHttp\Client as HttpClient;
-use WebSocket\Client as WsClient;
 
 class Zenon
 {
@@ -28,11 +27,6 @@ class Zenon
      * @var ?HttpClient
      */
     protected ?HttpClient $httpClient = null;
-
-    /**
-     * @var ?WsClient
-     */
-    protected ?WsClient $wsClient = null;
 
     /**
      * @var Accelerator
@@ -103,35 +97,18 @@ class Zenon
         $this->nodeUrl = $nodeUrl;
         $this->connect();
 
-        $isWsConnection = $this->isWsConnection();
-        $client = ($isWsConnection
-            ? $this->wsClient
-            : $this->httpClient);
-
-        $this->accelerator = new Accelerator($client, $throwErrors, $isWsConnection);
-        $this->bridge = new Bridge($client, $throwErrors, $isWsConnection);
-        $this->htlc = new Htlc($client, $throwErrors, $isWsConnection);
-        $this->ledger = new Ledger($client, $throwErrors, $isWsConnection);
-        $this->liquidity = new Liquidity($client, $throwErrors, $isWsConnection);
-        $this->pillar = new Pillar($client, $throwErrors, $isWsConnection);
-        $this->plasma = new Plasma($client, $throwErrors, $isWsConnection);
-        $this->sentinel = new Sentinel($client, $throwErrors, $isWsConnection);
-        $this->stake = new Stake($client, $throwErrors, $isWsConnection);
-        $this->stats = new Stats($client, $throwErrors, $isWsConnection);
-        $this->swap = new Swap($client, $throwErrors, $isWsConnection);
-        $this->token = new Token($client, $throwErrors, $isWsConnection);
-
-        return $this;
-    }
-
-    /**
-     * Checks if the nodeUrl is a WS/WSS connection
-     *
-     * @return bool
-     */
-    protected function isWsConnection(): bool
-    {
-        return (substr($this->nodeUrl, 0, 5) === "ws://" || substr($this->nodeUrl, 0, 6) === 'wss://');
+        $this->accelerator = new Accelerator($this->httpClient, $throwErrors);
+        $this->bridge = new Bridge($this->httpClient, $throwErrors);
+        $this->htlc = new Htlc($this->httpClient, $throwErrors);
+        $this->ledger = new Ledger($this->httpClient, $throwErrors);
+        $this->liquidity = new Liquidity($this->httpClient, $throwErrors);
+        $this->pillar = new Pillar($this->httpClient, $throwErrors);
+        $this->plasma = new Plasma($this->httpClient, $throwErrors);
+        $this->sentinel = new Sentinel($this->httpClient, $throwErrors);
+        $this->stake = new Stake($this->httpClient, $throwErrors);
+        $this->stats = new Stats($this->httpClient, $throwErrors);
+        $this->swap = new Swap($this->httpClient, $throwErrors);
+        $this->token = new Token($this->httpClient, $throwErrors);
     }
 
     /**
@@ -141,13 +118,9 @@ class Zenon
      */
     private function connect(): void
     {
-        if ($this->isWsConnection()) {
-            $this->wsClient = new WsClient($this->nodeUrl);
-        } else {
-            $this->httpClient = new HttpClient([
-                'base_uri' => $this->nodeUrl,
-                'timeout' => 2.0,
-            ]);
-        }
+        $this->httpClient = new HttpClient([
+            'base_uri' => $this->nodeUrl,
+            'timeout' => 2.0,
+        ]);
     }
 }
