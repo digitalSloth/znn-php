@@ -75,6 +75,16 @@ class Str extends BaseType implements TypeInterface
 
         $strValue = mb_substr($strValue, 0, (int) $strLen * 2);
 
-        return Utilities::hexToBin($strValue);
+        $value = Utilities::hexToBin($strValue);
+
+        return $this->fixValueFormatting($value);
+    }
+
+    private function fixValueFormatting($value): string
+    {
+        // Fix for string[] encoding, related issues...
+        // https://github.com/web3p/web3.php/issues/311
+        // https://github.com/web3p/web3.php/issues/300
+        return preg_replace("/[\x00\x1A\x10\x1]/", '', $value);
     }
 }
