@@ -236,10 +236,10 @@ class Utilities
             $number = (string) $number;
 
             if (self::isNegative($number)) {
-                $number = str_replace('-', '', $number);
+                $count = 1;
+                $number = str_replace('-', '', $number, $count);
                 $negative1 = new BigNumber(-1);
             }
-
             if (strpos($number, '.') > 0) {
                 $comps = explode('.', $number);
 
@@ -252,7 +252,7 @@ class Utilities
                 return [
                     new BigNumber($whole),
                     new BigNumber($fraction),
-                    strlen($comps[1]),
+                    strlen($fraction),
                     $negative1 ?? false
                 ];
             }
