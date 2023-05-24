@@ -173,15 +173,26 @@ class BaseType
             $arrayOffset = (int) Utilities::toBn('0x' . mb_substr($value, $offset * 2, 64))->toString();
             $length = (int) Utilities::toBn('0x' . mb_substr($value, $arrayOffset * 2, 64))->toString();
             $arrayStart = $arrayOffset + 32;
-
             $nestedName = $this->nestedName($name);
+            $result = [];
+
+            if (in_array($nestedName, ['bytes', 'string'])) {
+                $dynamicArrayStart = $arrayStart * 2;
+                for ($i = 0; $i < $length; $i++) {
+                    $byteOffset	= (int) Utilities::toBn('0x' . mb_substr($value, ($dynamicArrayStart + (64 * $i)), 64))->toString();
+                    $result[] = $this->decode($value, $dynamicArrayStart + ($byteOffset * 2) , $nestedName);
+                }
+
+                return $result;
+            }
+
             $nestedStaticPartLength = $this->staticPartLength($nestedName);
             $roundedNestedStaticPartLength = floor(($nestedStaticPartLength + 31) / 32) * 32;
-            $result = [];
 
             for ($i=0; $i<$length * $roundedNestedStaticPartLength; $i+=$roundedNestedStaticPartLength) {
                 $result[] = $this->decode($value, $arrayStart + $i, $nestedName);
             }
+
             return $result;
         }
 
@@ -195,16 +206,22 @@ class BaseType
             $result = [];
 
             for ($i=0; $i<$length * $roundedNestedStaticPartLength; $i+=$roundedNestedStaticPartLength) {
-                $result[] = $this->decode($value, $arrayStart + $i, $nestedName);
+                $result[] = $this->decode($value, ($arrayStart + $i), $nestedName);
             }
             return $result;
         }
 
         if ($this->isDynamicType()) {
-            $dynamicOffset = (int) Utilities::toBn('0x' . mb_substr($value, $offset * 2, 64))->toString();
-            $length = (int) Utilities::toBn('0x' . mb_substr($value, (int) ($dynamicOffset * 2), 64))->toString();
-            $roundedLength = floor(($length + 31) / 32);
-            $param = mb_substr($value, (int) ($dynamicOffset * 2), (int) ((1 + $roundedLength) * 64));
+            if (in_array($name, ['bytes', 'string'])) {
+                $byteOffset = (int) Utilities::toBn('0x' . mb_substr($value, $offset, 64))->toString();
+                $byteOffset = (floor($byteOffset / 32) + 1) * 64;
+                $param = mb_substr($value, ($offset), ($byteOffset + 64));
+            } else {
+                $dynamicOffset = (int) Utilities::toBn('0x' . mb_substr($value, $offset * 2, 64))->toString();
+                $length = (int) Utilities::toBn('0x' . mb_substr($value, $dynamicOffset * 2, 64))->toString();
+                $roundedLength = floor(($length + 31) / 32);
+                $param = mb_substr($value, $dynamicOffset * 2, ( 1 + $roundedLength) * 64);
+            }
             return $this->outputFormat($param, $name);
         }
 
