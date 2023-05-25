@@ -165,9 +165,10 @@ class BaseType
      * @param mixed $value
      * @param string $offset
      * @param string $name
+     * @param bool $array
      * @return mixed
      */
-    public function decode(mixed $value, string $offset, string $name): mixed
+    public function decode(mixed $value, string $offset, string $name, bool $array = false): mixed
     {
         if ($this->isDynamicArray($name)) {
             $arrayOffset = (int) Utilities::toBn('0x' . mb_substr($value, $offset * 2, 64))->toString();
@@ -180,7 +181,7 @@ class BaseType
                 $dynamicArrayStart = $arrayStart * 2;
                 for ($i = 0; $i < $length; $i++) {
                     $byteOffset	= (int) Utilities::toBn('0x' . mb_substr($value, ($dynamicArrayStart + (64 * $i)), 64))->toString();
-                    $result[] = $this->decode($value, $dynamicArrayStart + ($byteOffset * 2) , $nestedName);
+                    $result[] = $this->decode($value, $dynamicArrayStart + ($byteOffset * 2) , $nestedName, true);
                 }
 
                 return $result;
@@ -212,16 +213,17 @@ class BaseType
         }
 
         if ($this->isDynamicType()) {
-            if (in_array($name, ['bytes', 'string'])) {
-                $byteOffset = (int) Utilities::toBn('0x' . mb_substr($value, $offset, 64))->toString();
-                $byteOffset = (floor($byteOffset / 32) + 1) * 64;
-                $param = mb_substr($value, ($offset), ($byteOffset + 64));
+            if ($array && in_array($name, ['bytes', 'string'])) {
+                $length = (int) Utilities::toBn('0x' . mb_substr($value, $offset, 64))->toString();
+                $roundedLength = (floor($length / 32) + 1) * 64;
+                $param = mb_substr($value, ($offset), (int) ($roundedLength + 64));
             } else {
                 $dynamicOffset = (int) Utilities::toBn('0x' . mb_substr($value, $offset * 2, 64))->toString();
                 $length = (int) Utilities::toBn('0x' . mb_substr($value, $dynamicOffset * 2, 64))->toString();
                 $roundedLength = floor(($length + 31) / 32);
                 $param = mb_substr($value, $dynamicOffset * 2, ( 1 + $roundedLength) * 64);
             }
+
             return $this->outputFormat($param, $name);
         }
 
