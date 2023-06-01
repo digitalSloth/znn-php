@@ -104,10 +104,10 @@ class BaseType
         foreach ($nestedTypes as $type) {
             $num = mb_substr($type, 1, 1);
 
-            if (!is_numeric($num)) {
+            if (! is_numeric($num)) {
                 $num = 1;
             } else {
-                $num = intval($num);
+                $num = (int) $num;
             }
             $count *= $num;
         }
@@ -177,12 +177,12 @@ class BaseType
      * decode
      *
      * @param mixed $value
-     * @param string $offset
+     * @param int $offset
      * @param string $name
      * @param bool $array
      * @return mixed
      */
-    public function decode(mixed $value, string $offset, string $name, bool $array = false): mixed
+    public function decode(mixed $value, int $offset, string $name, bool $array = false): mixed
     {
         if ($this->isDynamicArray($name)) {
             $arrayOffset = (int) Utilities::toBn('0x' . mb_substr($value, $offset * 2, 64))->toString();
@@ -204,8 +204,8 @@ class BaseType
             $nestedStaticPartLength = $this->staticPartLength($nestedName);
             $roundedNestedStaticPartLength = floor(($nestedStaticPartLength + 31) / 32) * 32;
 
-            for ($i=0; $i<$length * $roundedNestedStaticPartLength; $i+=$roundedNestedStaticPartLength) {
-                $result[] = $this->decode($value, $arrayStart + $i, $nestedName);
+            for ($i = 0; $i < $length * $roundedNestedStaticPartLength; $i += $roundedNestedStaticPartLength) {
+                $result[] = $this->decode($value, ($arrayStart + $i), $nestedName);
             }
 
             return $result;
