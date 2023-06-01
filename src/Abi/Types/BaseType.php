@@ -140,6 +140,20 @@ class BaseType
             $result = [];
             $result[] = IntegerFormatter::format($length);
 
+            if ($this->isDynamicType()) {
+                $start = 0;
+                foreach ($value as $index => $val) {
+                    if ($start === 0){
+                        $dynamicLength = $length * 32;
+                    } else {
+                        $dynamicValue = Utilities::toHex($value[$index-1]);
+                        $dynamicLength = (floor((mb_strlen($dynamicValue) + 63) / 64) + 1) * 32;
+                    }
+                    $start += $dynamicLength;
+                    $result[] = IntegerFormatter::format($start);
+                }
+            }
+
             foreach ($value as $val) {
                 $result[] = $this->encode($val, $nestedName);
             }
