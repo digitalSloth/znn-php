@@ -14,6 +14,7 @@ class Utilities
 {
     public static function addressFromPublicKey(string $publicKey): bool|string
     {
+        $publicKey = self::hexToBin($publicKey);
         $hash = Hash::digest($publicKey);
         $data = [0, ...$hash->core];
         $digest = array_slice($data, 0, 20);
