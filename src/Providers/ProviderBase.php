@@ -22,7 +22,7 @@ class ProviderBase
     /**
      * @var mixed $lastRequest
      */
-    protected mixed $lastRequest;
+    protected mixed $lastRequest = null;
 
     /**
      * @var array $result
