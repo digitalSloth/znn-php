@@ -12,6 +12,11 @@ use function BitWasp\Bech32\convertBits;
 
 class Utilities
 {
+    /**
+     * addressFromPublicKey
+     * Generates an address form a given public key
+     *
+     */
     public static function addressFromPublicKey(string $publicKey): bool|string
     {
         $publicKey = self::hexToBin($publicKey);
@@ -22,6 +27,10 @@ class Utilities
         return (new Address($bech32))->toString();
     }
 
+    /**
+     * ztsFromHash
+     * Generates a ZTS from a given hash
+     */
     public static function ztsFromHash(string $hash): bool|string
     {
         $data = self::hexToBin($hash);
