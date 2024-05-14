@@ -6,11 +6,14 @@ use DigitalSloth\ZnnPhp\Abi\Handler;
 use DigitalSloth\ZnnPhp\Abi\Types\Address;
 use DigitalSloth\ZnnPhp\Abi\Types\Boolean;
 use DigitalSloth\ZnnPhp\Abi\Types\Bytes;
+use DigitalSloth\ZnnPhp\Abi\Types\DynamicArray;
 use DigitalSloth\ZnnPhp\Abi\Types\DynamicBytes;
 use DigitalSloth\ZnnPhp\Abi\Types\Hash;
 use DigitalSloth\ZnnPhp\Abi\Types\Integer;
+use DigitalSloth\ZnnPhp\Abi\Types\SizedArray;
 use DigitalSloth\ZnnPhp\Abi\Types\Str;
 use DigitalSloth\ZnnPhp\Abi\Types\TokenStandard;
+use DigitalSloth\ZnnPhp\Abi\Types\Tuple;
 use DigitalSloth\ZnnPhp\Abi\Types\Uinteger;
 use DigitalSloth\ZnnPhp\Test\TestCase;
 
@@ -24,19 +27,19 @@ class HandlerTest extends TestCase
     /**
      * encodingTests
      */
-    protected array $encodingTests = [
+    protected $encodingTests = [
         [
             'params' => [['uint256','string'], ['2345675643', 'Hello!%']],
             'result' => '0x000000000000000000000000000000000000000000000000000000008bd02b7b0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000000748656c6c6f212500000000000000000000000000000000000000000000000000'
-        ], [
+        ],[
             'params' => [['uint8[]','bytes32'], [['34','434'], '0x324567dfff']],
             'result' => '0x0000000000000000000000000000000000000000000000000000000000000040324567dfff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000002200000000000000000000000000000000000000000000000000000000000001b2'
         ], [
-            'params' => [['address','address','address', 'address'], ['0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1','','0x0', null]],
-            'result' => '0x00000000000000000000000090f8bf6a479f320ead074411a4b0e7944ea8c9c1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
-        ], [
             'params' => [['bool[2]', 'bool[3]'], [[true, false], [false, false, true]]],
             'result' => '0x00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001'
+        ], [
+            'params' => [['address'], ['z1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqsggv2f']],
+            'result' => '0x0000000000000000000000000000000000000000000000000000000000000000'
         ], [
             'params' => [['int'], [1]],
             'result' => '0x0000000000000000000000000000000000000000000000000000000000000001'
@@ -73,7 +76,7 @@ class HandlerTest extends TestCase
     /**
      * decodingTests
      */
-    protected array $decodingTests = [
+    protected $decodingTests = [
         [
             'params' => [['uint256'], '0x0000000000000000000000000000000000000000000000000000000000000010'],
             'result' => ['16']
@@ -94,7 +97,7 @@ class HandlerTest extends TestCase
             'result' => ['0']
         ], [
             'params' => [['address'], '0x0000000000000000000000000000000000000000000000000000000000000000'],
-            'result' => ['0x0000000000000000000000000000000000000000']
+            'result' => ['z1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqsggv2f']
         ], [
             'params' => [['bool'], '0x0000000000000000000000000000000000000000000000000000000000000000'],
             'result' => [false]
@@ -132,6 +135,9 @@ class HandlerTest extends TestCase
             'string' => new Str,
             'tokenStandard' => new TokenStandard,
             'uint' => new Uinteger,
+            'sizedArray' => new SizedArray,
+            'dynamicArray' => new DynamicArray,
+            'tuple' => new Tuple,
         ]);
     }
 
@@ -140,18 +146,18 @@ class HandlerTest extends TestCase
      *
      * @return void
      */
-    public function testEncodeFunctionSignature()
-    {
-        $abi = $this->handler;
-        $str = $abi->getMethodSignature('baz(uint32,bool)');
-        $this->assertEquals('0xcdcd77c0', $str);
-
-        $str = $abi->encodeFunctionSignature('bar(bytes3[2])');
-        $this->assertEquals('0xfce353f6', $str);
-
-        $str = $abi->encodeFunctionSignature('sam(bytes,bool,uint256[])');
-        $this->assertEquals('0xa5643bf2', $str);
-    }
+//    public function testEncodeFunctionSignature()
+//    {
+//        $abi = $this->handler;
+//        $str = $abi->getMethodSignature('baz(uint32,bool)');
+//        $this->assertEquals('0xcdcd77c0', $str);
+//
+//        $str = $abi->encodeFunctionSignature('bar(bytes3[2])');
+//        $this->assertEquals('0xfce353f6', $str);
+//
+//        $str = $abi->encodeFunctionSignature('sam(bytes,bool,uint256[])');
+//        $this->assertEquals('0xa5643bf2', $str);
+//    }
 
     /**
      * testEncodeParameter

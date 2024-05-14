@@ -127,22 +127,10 @@ class UtilitiesTest extends TestCase
     public function testIsAddress(): void
     {
         $isAddress = Utilities::isAddress('ca35b7d915458ef540ade6068dfe2f44e8fa733c');
-        $this->assertEquals(true, $isAddress);
-
-        $isAddress = Utilities::isAddress('0xca35b7d915458ef540ade6068dfe2f44e8fa733c');
-        $this->assertEquals(true, $isAddress);
-
-        $isAddress = Utilities::isAddress('0Xca35b7d915458ef540ade6068dfe2f44e8fa733c');
-        $this->assertEquals(true, $isAddress);
-
-        $isAddress = Utilities::isAddress('0XCA35B7D915458EF540ADE6068DFE2F44E8FA733C');
-        $this->assertEquals(true, $isAddress);
-
-        $isAddress = Utilities::isAddress('0xCA35B7D915458EF540ADE6068DFE2F44E8FA733C');
-        $this->assertEquals(true, $isAddress);
-
-        $isAddress = Utilities::isAddress('0xCA35B7D915458EF540ADE6068DFE2F44E8FA73cc');
         $this->assertEquals(false, $isAddress);
+
+        $isAddress = Utilities::isAddress('z1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqsggv2f');
+        $this->assertEquals(true, $isAddress);
     }
 
     /**

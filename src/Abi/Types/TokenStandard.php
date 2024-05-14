@@ -17,7 +17,7 @@ class TokenStandard extends Integer
      */
     public function isType(string $name): bool
     {
-        return (preg_match('/^tokenStandard(\[([0-9]*)\])*$/', $name) === 1);
+        return (preg_match('/^tokenStandard/', $name) === 1);
     }
 
     /**
@@ -38,7 +38,7 @@ class TokenStandard extends Integer
      * @param string $name
      * @return string
      */
-    public function inputFormat(mixed $value, string $name): string
+    public function inputFormat(mixed $value, array $abiType): string
     {
         $value = decode($value)[1];
         $value = convertBits($value, count($value),5, 8, false);
@@ -56,7 +56,7 @@ class TokenStandard extends Integer
      * @param string $name
      * @return string
      */
-    public function outputFormat(mixed $value, string $name): string
+    public function outputFormat(mixed $value, array $abiType): string
     {
         $token = mb_substr($value, 24, 40);
         $bytes = Utilities::toBytesArray($token);

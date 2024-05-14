@@ -5,11 +5,14 @@ namespace DigitalSloth\ZnnPhp\Abi;
 use DigitalSloth\ZnnPhp\Abi\Types\Address;
 use DigitalSloth\ZnnPhp\Abi\Types\Boolean;
 use DigitalSloth\ZnnPhp\Abi\Types\Bytes;
+use DigitalSloth\ZnnPhp\Abi\Types\DynamicArray;
 use DigitalSloth\ZnnPhp\Abi\Types\DynamicBytes;
 use DigitalSloth\ZnnPhp\Abi\Types\Hash;
 use DigitalSloth\ZnnPhp\Abi\Types\Integer;
+use DigitalSloth\ZnnPhp\Abi\Types\SizedArray;
 use DigitalSloth\ZnnPhp\Abi\Types\Str;
 use DigitalSloth\ZnnPhp\Abi\Types\TokenStandard;
+use DigitalSloth\ZnnPhp\Abi\Types\Tuple;
 use DigitalSloth\ZnnPhp\Abi\Types\Uinteger;
 use DigitalSloth\ZnnPhp\Exceptions\DecodeException;
 use DigitalSloth\ZnnPhp\Exceptions\EncodeException;
@@ -21,8 +24,12 @@ class Abi
 
     protected Handler $handler;
 
-    public function __construct()
+    public function __construct(?string $abi = null)
     {
+        if ($abi) {
+            $this->abi = json_decode($abi, true, 512, JSON_THROW_ON_ERROR);
+        }
+
         $this->handler = new Handler([
             'address' => new Address,
             'bool' => new Boolean,
@@ -33,6 +40,9 @@ class Abi
             'string' => new Str,
             'tokenStandard' => new TokenStandard,
             'uint' => new Uinteger,
+            'sizedArray' => new SizedArray,
+            'dynamicArray' => new DynamicArray,
+            'tuple' => new Tuple,
         ]);
     }
 

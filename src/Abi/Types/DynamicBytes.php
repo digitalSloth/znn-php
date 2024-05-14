@@ -2,10 +2,11 @@
 
 namespace DigitalSloth\ZnnPhp\Abi\Types;
 
+use DigitalSloth\ZnnPhp\Abi\AbiType;
 use DigitalSloth\ZnnPhp\Utilities;
 use InvalidArgumentException;
 
-class DynamicBytes extends BaseType implements TypeInterface
+class DynamicBytes extends AbiType implements TypeInterface
 {
     /**
      * isType
@@ -35,7 +36,7 @@ class DynamicBytes extends BaseType implements TypeInterface
      * @param string $name
      * @return string
      */
-    public function inputFormat(mixed $value, string $name): string
+    public function inputFormat(mixed $value, array $abiType): string
     {
         if (! Utilities::isHex($value)) {
             throw new InvalidArgumentException('The value to inputFormat must be hex bytes.');
@@ -68,7 +69,7 @@ class DynamicBytes extends BaseType implements TypeInterface
      * @param string $name
      * @return string
      */
-    public function outputFormat(mixed $value, string $name): string
+    public function outputFormat(mixed $value, array $abiType): string
     {
         $checkZero = str_replace('0', '', $value);
 

@@ -2,22 +2,13 @@
 
 namespace DigitalSloth\ZnnPhp\Abi\Types;
 
+use DigitalSloth\ZnnPhp\Abi\AbiType;
 use DigitalSloth\ZnnPhp\Formatters\BigNumberFormatter;
 use DigitalSloth\ZnnPhp\Formatters\IntegerFormatter;
 use DigitalSloth\ZnnPhp\Utilities;
 
-class Str extends BaseType implements TypeInterface
+class Str extends AbiType implements TypeInterface
 {
-    /**
-     * construct
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
     /**
      * isType
      *
@@ -26,7 +17,7 @@ class Str extends BaseType implements TypeInterface
      */
     public function isType(string $name): bool
     {
-        return (preg_match('/^string(\[([0-9]*)\])*$/', $name) === 1);
+        return (preg_match('/^string/', $name) === 1);
     }
 
     /**
@@ -46,7 +37,7 @@ class Str extends BaseType implements TypeInterface
      * @param string $name
      * @return string
      */
-    public function inputFormat(mixed $value, string $name): string
+    public function inputFormat(mixed $value, array $abiType): string
     {
         $value = Utilities::toHex($value);
         $prefix = IntegerFormatter::format(mb_strlen($value) / 2);
@@ -63,7 +54,7 @@ class Str extends BaseType implements TypeInterface
      * @param string $name
      * @return string
      */
-    public function outputFormat(mixed $value, string $name): string
+    public function outputFormat(mixed $value, array $abiType): string
     {
         $strLen = mb_substr($value, 0, 64);
         $strValue = mb_substr($value, 64);

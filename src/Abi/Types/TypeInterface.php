@@ -26,5 +26,5 @@ interface TypeInterface
      * @param string $name
      * @return string
      */
-    public function inputFormat(mixed $value, string $name): string;
+    public function inputFormat(mixed $value, array $abiType): string;
 }

@@ -2,21 +2,12 @@
 
 namespace DigitalSloth\ZnnPhp\Abi\Types;
 
-use DigitalSloth\ZnnPhp\Formatters\IntegerFormatter;
+use DigitalSloth\ZnnPhp\Abi\AbiType;
 use DigitalSloth\ZnnPhp\Formatters\BigNumberFormatter;
+use DigitalSloth\ZnnPhp\Formatters\IntegerFormatter;
 
-class Integer extends BaseType implements TypeInterface
+class Integer extends AbiType implements TypeInterface
 {
-    /**
-     * construct
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
     /**
      * isType
      *
@@ -25,7 +16,7 @@ class Integer extends BaseType implements TypeInterface
      */
     public function isType(string $name): bool
     {
-        return (preg_match('/^int([0-9]+)?(\[([0-9]*)\])*$/', $name) === 1);
+        return (preg_match('/^int([0-9]{1,})?/', $name) === 1);
     }
 
     /**
@@ -45,7 +36,7 @@ class Integer extends BaseType implements TypeInterface
      * @param string $name
      * @return string
      */
-    public function inputFormat(mixed $value, string $name): string
+    public function inputFormat(mixed $value, array $abiType): string
     {
         return IntegerFormatter::format($value);
     }
@@ -57,7 +48,7 @@ class Integer extends BaseType implements TypeInterface
      * @param string $name
      * @return string
      */
-    public function outputFormat(mixed $value, string $name): string
+    public function outputFormat(mixed $value, array $abiType): string
     {
         $match = [];
 
@@ -65,6 +56,7 @@ class Integer extends BaseType implements TypeInterface
             // due to value without 0x prefix, we will parse as decimal
             $value = '0x' . $match[1];
         }
+
         return BigNumberFormatter::format($value);
     }
 }
