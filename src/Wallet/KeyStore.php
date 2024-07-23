@@ -36,7 +36,8 @@ class KeyStore
 
     public static function random(): KeyStore
     {
-        return self::fromEntropy(random_bytes(32));
+        $random = Utilities::toHex(random_bytes(32));
+        return self::fromEntropy($random);
     }
 
     public function getKeyPair(int $index = 0)
