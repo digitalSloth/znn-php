@@ -40,10 +40,12 @@ class KeyStore
         return self::fromEntropy($random);
     }
 
-    public function getKeyPair(int $index = 0)
+    public function getKeyPair(int $index = 0): KeyPair
     {
-        // TODO - need to use the index to get the relevant address
-        $derivationPath = "m/44'/73404'/{$index}";
-        return KeyPair::fromPrivateKey($this->seed);
+        $derivationPath = "m/44'/73404'/{$index}'";
+        $derivation = KeyDerivation::derivePath($derivationPath, $this->seed);
+        $key = Utilities::toHex($derivation['key']);
+
+        return KeyPair::fromPrivateKey($key);
     }
 }
