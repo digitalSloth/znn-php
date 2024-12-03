@@ -120,7 +120,6 @@ class Zenon
     {
         $this->httpClient = new HttpClient([
             'base_uri' => $this->nodeUrl,
-            'timeout' => 2.0,
         ]);
     }
 }
