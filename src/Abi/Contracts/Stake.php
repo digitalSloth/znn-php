@@ -27,5 +27,15 @@ class Stake extends Abi
                 ],
             ],
         ],
+        [
+            'type' => 'function',
+            'name' => 'CollectReward',
+            'inputs' => [],
+        ],
+        [
+            'type' => 'function',
+            'name' => 'Update',
+            'inputs' => [],
+        ],
     ];
 }

@@ -1,18 +1,18 @@
 <?php
 
-namespace DigitalSloth\ZnnPhp\Test\Unit\Abi\Types;
+namespace DigitalSloth\ZnnPhp\Test\Unit\Abi;
 
-use DigitalSloth\ZnnPhp\Abi\Types\BaseType;
+use DigitalSloth\ZnnPhp\Abi\AbiType;
 use DigitalSloth\ZnnPhp\Test\TestCase;
 
-class BaseTypeTest extends TestCase
+class AbiTypeTest extends TestCase
 {
     /**
      * type
      *
-     * @var BaseType
+     * @var AbiType
      */
-    protected BaseType $type;
+    protected AbiType $type;
 
     /**
      * setUp
@@ -22,7 +22,7 @@ class BaseTypeTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->type = new BaseType();
+        $this->type = new AbiType();
     }
 
     /**

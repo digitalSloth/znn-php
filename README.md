@@ -1,6 +1,6 @@
 # znn-php
 
-The ZNN-PHP package allows you to read the JSON-RPC endpoints of the [zenon.network](https://zenon.network/) as described [here](https://github.com/zenon-network/znn-wiki/blob/master/api.md). It also provides methods for working with the ABI data.
+The ZNN-PHP package allows you to read the JSON-RPC endpoints of the [zenon.network](https://zenon.community/) as described [here](https://github.com/zenon-network/znn-wiki/blob/master/api.md). It also provides methods for working with the ABI data.
 
 - [X] RPC Endpoints
 - [X] ABI Decoding
@@ -27,7 +27,7 @@ composer require digitalsloth/znn-php
 Create a new instance of `$znn` calling the provider and method you want. All `accelerator`, `pillar`, `plasma`, `sentinel`, `stake`, `swap` , `token`, `ledger` and `stats` endpoints listed [here](https://github.com/zenon-network/znn-wiki/blob/master/api.md#embedded-smart-contracts) can be reached through the `$znn` instance.
 ```php
 // config
-$nodeUrl = 'ws://public.deeZNNodez.com:35998';
+$nodeUrl = 'https://node.zenonhub.io:35997';
 $throwErrors = true;
 
 // zenon client

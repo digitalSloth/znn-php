@@ -2,20 +2,11 @@
 
 namespace DigitalSloth\ZnnPhp\Abi\Types;
 
+use DigitalSloth\ZnnPhp\Abi\AbiType;
 use DigitalSloth\ZnnPhp\Formatters\IntegerFormatter;
 
-class Hash extends BaseType implements TypeInterface
+class Hash extends AbiType implements TypeInterface
 {
-    /**
-     * construct
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
     /**
      * isType
      *
@@ -24,7 +15,7 @@ class Hash extends BaseType implements TypeInterface
      */
     public function isType(string $name): bool
     {
-        return (preg_match('/^hash(\[([0-9]*)\])*$/', $name) === 1);
+        return (preg_match('/^hash/', $name) === 1);
     }
 
     /**
@@ -42,10 +33,10 @@ class Hash extends BaseType implements TypeInterface
      * to do: iban
      *
      * @param mixed $value
-     * @param string $name
+     * @param array $abiType
      * @return string
      */
-    public function inputFormat(mixed $value, string $name): string
+    public function inputFormat(mixed $value, array $abiType): string
     {
         return IntegerFormatter::format($value);
     }
@@ -54,11 +45,11 @@ class Hash extends BaseType implements TypeInterface
      * outputFormat
      *
      * @param mixed $value
-     * @param string $name
+     * @param array $abiType
      * @return string
      */
-    public function outputFormat(mixed $value, string $name): string
+    public function outputFormat(mixed $value, array $abiType): string
     {
-        return $value;
+	    return substr($value, 0, 64);
     }
 }

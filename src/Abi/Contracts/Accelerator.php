@@ -9,6 +9,16 @@ class Accelerator extends Abi
     protected array $abi = [
         [
             'type' => 'function',
+            'name' => 'Update',
+            'inputs' => [],
+        ],
+        [
+            'type' => 'function',
+            'name' => 'Donate',
+            'inputs' => [],
+        ],
+        [
+            'type' => 'function',
             'name' => 'CreateProject',
             'inputs' => [
                 [
@@ -92,11 +102,6 @@ class Accelerator extends Abi
                     'type' => 'uint256',
                 ],
             ],
-        ],
-        [
-            'type' => 'function',
-            'name' => 'Donate',
-            'inputs' => [],
         ],
         [
             'type' => 'function',

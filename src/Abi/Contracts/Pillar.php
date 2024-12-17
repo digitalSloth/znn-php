@@ -9,6 +9,11 @@ class Pillar extends Abi
     protected array $abi = [
         [
             'type' => 'function',
+            'name' => 'Update',
+            'inputs' => [],
+        ],
+        [
+            'type' => 'function',
             'name' => 'Register',
             'inputs' => [
                 [
@@ -69,16 +74,6 @@ class Pillar extends Abi
         ],
         [
             'type' => 'function',
-            'name' => 'Revoke',
-            'inputs' => [
-                [
-                    'name' => 'name',
-                    'type' => 'string',
-                ],
-            ],
-        ],
-        [
-            'type' => 'function',
             'name' => 'UpdatePillar',
             'inputs' => [
                 [
@@ -105,6 +100,26 @@ class Pillar extends Abi
         ],
         [
             'type' => 'function',
+            'name' => 'DepositQsr',
+            'inputs' => [],
+        ],
+        [
+            'type' => 'function',
+            'name' => 'WithdrawQsr',
+            'inputs' => [],
+        ],
+        [
+            'type' => 'function',
+            'name' => 'Revoke',
+            'inputs' => [
+                [
+                    'name' => 'name',
+                    'type' => 'string',
+                ],
+            ],
+        ],
+        [
+            'type' => 'function',
             'name' => 'Delegate',
             'inputs' => [
                 [
@@ -116,6 +131,11 @@ class Pillar extends Abi
         [
             'type' => 'function',
             'name' => 'Undelegate',
+            'inputs' => [],
+        ],
+        [
+            'type' => 'function',
+            'name' => 'CollectReward',
             'inputs' => [],
         ],
     ];

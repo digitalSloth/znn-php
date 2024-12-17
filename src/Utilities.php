@@ -31,9 +31,9 @@ class Utilities
      * ztsFromHash
      * Generates a ZTS from a given hash
      */
-    public static function ztsFromHash(string $hash): bool|string
+    public static function ztsFromHash(string $inputHash): bool|string
     {
-        $data = self::hexToBin($hash);
+        $data = self::hexToBin($inputHash);
         $hash = Hash::digest($data);
         $data = array_slice($hash->core, 0, 10);
         $bech32 = convertBits($data, count($data), 8, 5);
@@ -113,8 +113,7 @@ class Utilities
      */
     public static function toHex(mixed $value, bool $isPrefix = false): string
     {
-		// if (is_numeric($value)) {
-        if (is_numeric($value) && !is_string($value)) {
+        if (is_int($value) || is_float($value)) {
             // turn to hex number
             $bn = self::toBn($value);
             $hex = $bn->toHex(self::isNegative($value));
@@ -122,7 +121,6 @@ class Utilities
         }
 
         if (is_string($value)) {
-            $value = self::stripZero($value);
             $hex = implode('', unpack('H*', $value));
         }
 
@@ -146,8 +144,24 @@ class Utilities
         if (self::isZeroPrefixed($value)) {
             $count = 1;
             $value = str_replace('0x', '', $value, $count);
+
+            if (strlen($value) % 2 > 0) {
+                $value = '0' . $value;
+            }
         }
         return pack('H*', $value);
+    }
+
+    /**
+     * hexToNumber
+     *
+     */
+    public static function hexToNumber(string $hexNumber): int
+    {
+        if (!self::isZeroPrefixed($hexNumber)) {
+            $hexNumber = '0x' . $hexNumber;
+        }
+        return (int) self::toBn($hexNumber)->toString();
     }
 
     /**
@@ -197,8 +211,12 @@ class Utilities
     /**
      * isHex
      */
-    public static function isHex(string $value): bool
+    public static function isHex(mixed $value): bool
     {
+        if (! is_string($value)) {
+            return false;
+        }
+
         return (preg_match('/^(0x)?[a-f0-9]*$/', $value) === 1);
     }
 
@@ -242,7 +260,7 @@ class Utilities
             $bn = $number;
         } elseif (is_int($number)) {
             $bn = new BigNumber($number);
-        } elseif (preg_match('/^(-{0,1})[0-9]*$/', $number)) {
+        } elseif (is_numeric($number)) {
             $number = (string) $number;
 
             if (self::isNegative($number)) {

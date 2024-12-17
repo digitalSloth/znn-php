@@ -13,16 +13,16 @@
     "require": {
         "php": ">=8.2",
         "bitwasp/bech32": "^0.0.1",
-        "furqansiddiqui/bip39-mnemonic-php": "^0.1.7",
         "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-sodium": "*",
+        "furqansiddiqui/bip39-mnemonic-php": "^0.1.7",
         "guzzlehttp/guzzle": "^7.0",
         "phpseclib/phpseclib": "^3.0",
-        "simplito/elliptic-php": "^1.0",
-        "textalk/websocket": "^1.5",
-        "ext-mbstring": "*",
-		"ext-sodium": "*"
+        "simplito/elliptic-php": "^1.0"
     },
     "require-dev": {
+        "roave/security-advisories": "dev-latest",
         "phpunit/phpunit": "^8.0"
     },
     "autoload": {
