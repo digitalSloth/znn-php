@@ -3,7 +3,7 @@
     "description": "A PHP SDK for JSON-RPC endpoints of the zenon.network",
     "minimum-stability": "stable",
     "license": "mit",
-    "version": "1.0.1",
+    "version": "1.0.0",
     "authors": [
         {
             "name": "DigitalSloth",
